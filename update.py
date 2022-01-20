@@ -21,9 +21,9 @@ if __name__ == "__main__":
         ]
     )
     
-    sources = parser.parse_args()
+    args = parser.parse_args()
 
-    for source in sources:
+    for source in args.sources:
 
         if source == "cboe_all":
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
         elif source == "cme_latest":
 
-            cme_extract.get_files(["all"])
+            cme_extract.get_files([None, "all"])
             cme_transform.write_csv()
 
         elif source == "srf_all":

@@ -1,5 +1,6 @@
-from csv import reader, writer
-from json import loads
+from csv        import reader, writer
+from datetime   import datetime
+from json       import loads
 
 
 CALENDAR = {
@@ -148,6 +149,7 @@ def write_csv():
                     [
                         id,
                         exchange,
+                        symbol,
                         month,
                         year,
                         date,
@@ -179,11 +181,14 @@ def write_csv():
     # write ohlc and metadata records to file
     # all records are for the same day
 
-    yyyy_mm_dd = ohlc[1][1]
+    yyyy_mm_dd = datetime.strftime(
+                    datetime.today(),
+                    "%Y_%m_%d"
+                )
 
     for record_type, records in [
-        ( "ohlc_cme", ohlc ),
-        ( "metadata_cme", metadata )
+        ( "ohlc", ohlc ),
+        ( "metadata", metadata )
     ]:
 
         with open(f"{processed_path}{yyyy_mm_dd}_{record_type}.csv", "a") as fd:
