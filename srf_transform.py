@@ -4,6 +4,7 @@ from distutils.util import strtobool
 from json           import loads
 from os             import listdir
 from re             import match
+from time           import time
 from typing         import Dict, Tuple
 
 
@@ -134,17 +135,9 @@ def process_metadata(
     # 4 from_date       2017-08-15
     # 5 to_date         2018-01-12
 
-    records = [
-        [
-            "contract_id",
-            "from_date",
-            "to_date"
-        ]
-    ]
-
     with open(input_path, "r") as fd:
 
-        raw_records         = reader(fd)
+        data                = reader(fd)
         processed_records   = [
             [
                 "contract_id",
@@ -153,8 +146,9 @@ def process_metadata(
             ]
         ]
 
-        for record in raw_records:
+        next(data)
 
+        for record in data:
             
             _, _, _, _, new_id, enabled = get_id(record[0], enabled_contracts)
 
@@ -173,8 +167,10 @@ def process_metadata(
             w = writer(fd)
             w.writerows(processed_records)
 
-        
-if __name__=="__main__":
+
+def write_csv():
+
+    start_all = time()
 
     config              = loads(open("./config.json", "r").read())
     input_path          = config["input_path"]
@@ -218,17 +214,35 @@ if __name__=="__main__":
         m = match("SRF_\d+.*\.csv", file)
         
         if m:
+
+            print(f"processing {m[0]}\tSTART")
             
+            start = time()
+
             process_ohlc(
                 input_path          = f"{input_path}{m[0]}",
                 output_path         = f"{output_path}{yyyy_mm_dd}_ohlc.csv",
                 enabled_contracts   = enabled_contracts
             )
 
+            print(f"processing {m[0]}\tFINISH\t{time() - start: 0.4f}")
+
     # write processed metadata
+
+    print(f"processing SRF_metadata.csv")
+
+    start = time()
 
     process_metadata(
         input_path          = metadata_input_path,
         output_path         = f"{output_path}{yyyy_mm_dd}_metadata.csv",
         enabled_contracts   = enabled_contracts
     )
+
+    print(f"processing SRF_metadata.csv\tFINISH\t{time() - start: 0.4f}")
+    print(f"finish ALL\t\t\t\t{time() - start_all: 0.4f}")
+        
+
+if __name__=="__main__":
+
+    write_csv()

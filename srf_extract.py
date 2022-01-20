@@ -6,23 +6,19 @@ from time import time
 from zipfile import ZipFile
 
 
-# reference:
-# https://data.nasdaq.com/data/SRF-Reference-Futures/usage/export
+# srf reference: https://data.nasdaq.com/data/SRF-Reference-Futures/usage/export
 
-
-if __name__ == "__main__":
+def get_files(cmd: str):
 
     config          = loads(open("./config.json", "r").read())
     input_path      = config["input_path"]
     nasdaq_api_key  = config["srf"]["nasdaq_api_key"]
     ohlc_url        = f"{config['srf']['ohlc_url']}?api_key={nasdaq_api_key}"
     metadata_url    = f"{config['srf']['metadata_url']}?api_key={nasdaq_api_key}"
-    
+
     # cmd == "all" or "partial"
     # all for whole srf db; partial for today's rows
     # metadata is downloaded either way
-
-    cmd = argv[1]
 
     if cmd == "partial":
         
@@ -55,3 +51,10 @@ if __name__ == "__main__":
         print(f"GET\t{stem}\tFINISH\t{time() - start: 0.3f}")
 
     print(f"FINISH\t{cmd}\t{time() - start_all: 0.3f}")
+
+
+if __name__ == "__main__":
+
+    cmd = argv[1]
+
+    get_files(cmd)

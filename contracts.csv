@@ -45,7 +45,7 @@ description,srf,globex,exchange,enabled
 "Gas Oil","G","GX","ICE","False"
 "Heating Oil","O","","ICE","False"
 "Orange Juice","OJ","","ICE","False"
-"Rotterdam Coal","ATW","","ICE","False"
+"Rotterdam Coal","ATW","MTF","ICE","True"
 "Russell 1000 Index Mini: Discontinued","RF","RS1","CME","False"
 "Russell 2000 Index Mini: Discontinued","TF","RTY","CME","False"
 "Sm GBP/USD","MP","","ICE","False"

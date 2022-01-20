@@ -30,9 +30,9 @@ def write_csv():
     # globex symbol : exchange
 
     enabled_contracts = {
-        line[2] : line[3]
-        for line in contract_settings
-        if bool(line[4])
+        row[2] : row[3]
+        for row in contract_settings
+        if bool(row[4])
     }
 
     ohlc = [
@@ -164,7 +164,7 @@ def write_csv():
 
                     metadata_seen.add(id)
 
-                    # note: from_date is today, which means the database insert
+                    # note: from_date is "today", which means the database insert
                     # should discard this record if there already a record for
                     # the same "id" with an earlier from_date
 
@@ -186,7 +186,7 @@ def write_csv():
         ( "metadata_cme", metadata )
     ]:
 
-        with open(f"{processed_path}{yyyy_mm_dd}_{record_type}.csv", "w") as fd:
+        with open(f"{processed_path}{yyyy_mm_dd}_{record_type}.csv", "a") as fd:
 
             w = writer(fd, delimiter = ",")
             w.writerows(records)
