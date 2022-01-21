@@ -1,40 +1,37 @@
-from json import loads
-from sqlite3 import connect, OperationalError
+from csv        import reader
+from datetime   import datetime
+from json       import loads
+from sqlite3    import connect, Connection, OperationalError
+from time       import time
+from typing     import List
 
 
-if __name__ == "__main__":
+def load_ohlc(
+    cur:            Connection,
+    dates:          List[str],
+    processed_path: str
+):
 
-    config = loads(open("./config", "r").read())
-
-    # init db
-    
-    con = connect(f"./srf.db")
-    cur = con.cursor()
-
-    # create ohlc table
-
-    cur.execute("DROP TABLE IF EXISTS ohlc")
-    
     cur.execute(
-        '''
-        CREATE TABLE ohlc (
-            contract_id     TEXT, 
-            exchange        TEXT,
-            name            TEXT,
-            month           TEXT, 
-            year            TEXT,
-            date            TEXT,
-            open            REAL,
-            high            REAL,
-            low             REAL,
-            settle          REAL,
-            volume          INTEGER,
-            open_interest   INTEGER
-        );
-        '''
-    )
+            '''
+            CREATE TABLE IF NOT EXISTS ohlc (
+                contract_id     TEXT, 
+                exchange        TEXT,
+                name            TEXT,
+                month           TEXT, 
+                year            TEXT,
+                date            TEXT,
+                open            REAL,
+                high            REAL,
+                low             REAL,
+                settle          REAL,
+                volume          INTEGER,
+                open_interest   INTEGER
+                PRIMARY KEY(conract_id, date)
+            );
+            '''
+        )
 
-    # insert ohlc records
     statement = f'''
     INSERT INTO ohlc (
         contract_id, exchange, name, month, year, date,
@@ -43,71 +40,96 @@ if __name__ == "__main__":
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     '''
 
-    try:
+    start = time()
 
-        cur.executemany(statement, rs)
+    print("START\tohlc")
 
-    except OperationalError as e:
+    for date in dates:
+        
+        with open(f"{processed_path}{date}_ohlc.csv", "r") as fd:
+        
+            records = reader(fd)
 
-        print(f"ohlc error\t\t{e}")
+            try:
 
-        print("finished ohlc\t\t{:.2f}".format(time() - start))
+                cur.executemany(statement, records)
 
-    # create metadata table
-    cur.execute("DROP TABLE IF EXISTS metadata")
+            except OperationalError as e:
+
+                print(f"ERROR\tohlc\t\t{e}")
+
+    print(f"FINISH\tohlc\t\t{time() - start: .3f}")
+
+
+def load_metadata(
+    cur:            str,
+    dates:          List[str],
+    processed_path: str
+):
+
     cur.execute(
         '''
-            CREATE TABLE metadata
-            (
-            contract_id TEXT,
-            from_date TEXT,
-            to_date TEXT
+            CREATE TABLE IF NOT EXISTS metadata (
+                contract_id TEXT PRIMARY KEY,
+                from_date   TEXT,
+                to_date     TEXT
             );
         '''
     )
 
-    # get metadata
-    data = reader(get_csv_file(metadata_url))
-
-    print("downloaded metadata\t{:.2f}".format(time() - start))
-
-    # prepare and clean metadata records
-    corrections = {}
-
-    rs = []
-
-    for r in data:
-
-        for i in range(len(r)):
-
-            if r[i] == "" or r[i] == None:
-
-                r[i] = "NULL"
-
-            if r[0] in corrections:
-
-                for k, v in corrections[r[0]].items():
-
-                    r[k] = v 
-
-            rs.append([ r[0], r[4], r[5] ])
-
-    # insert metadata records
     statement = f'''
-    INSERT INTO metadata (contract_id, from_date, to_date)
-    VALUES (?, ?, ?);
+        INSERT INTO metadata (contract_id, from_date, to_date)
+        VALUES (?, ?, ?);
     '''
 
-    try:
+    start = time()
 
-        cur.executemany(statement, rs)
+    print("START\tmetadata")
 
-    except OperationalError as e:
+    for date in dates:
+        
+        with open(f"{processed_path}{date}_metadata.csv", "r") as fd:
+        
+            records = reader(fd)
 
-        print(f"metadata error\t\t{e}")
+            try:
 
-    # close db
+                cur.executemany(statement, records)
+
+            except OperationalError as e:
+
+                print(f"ERROR\tmetadata\t\t{e}")
+
+    print(f"FINISH\tmetadata\t\t{time() - start: .3f}")
+
+
+def load_processed(dates):
+
+    config          = loads(open("./config", "r").read())
+    db_path         = config["database_path"]
+    processed_path  = config["processed_path"]
+    
+    start_all = time()
+
+    print("START\tload_processed")
+
+    con = connect(db_path)
+    cur = con.cursor()
+
+    load_ohlc(cur, dates, processed_path)
+    load_metadata(cur, processed_path)
+
     con.commit()
     con.close()
 
-    print("finished srf db\t{:.2f}".format(time() - start))
+    print(f"FINISHED\tload_processed\t{time() - start_all:0.2f}")
+
+
+if __name__ == "__main__":
+
+    today = datetime.strftime(
+                "%Y_%m_%d",
+                datetime.today()
+            )
+
+    load_processed([ today ])
