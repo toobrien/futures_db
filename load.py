@@ -6,101 +6,35 @@ from time       import time
 from typing     import List
 
 
-def load_ohlc(
-    cur:            Connection,
-    dates:          List[str],
-    processed_path: str
+def update_table(
+    cur:                Connection,
+    dates:              List[str],
+    processed_path:     str,
+    table_name:         str,
+    table_statement:    str,
+    record_statement:   str
 ):
-
-    cur.execute(
-            '''
-            CREATE TABLE IF NOT EXISTS ohlc (
-                contract_id     TEXT, 
-                exchange        TEXT,
-                name            TEXT,
-                month           TEXT, 
-                year            TEXT,
-                date            TEXT,
-                open            REAL,
-                high            REAL,
-                low             REAL,
-                settle          REAL,
-                volume          INTEGER,
-                open_interest   INTEGER
-                PRIMARY KEY(conract_id, date)
-            );
-            '''
-        )
-
-    statement = f'''
-    INSERT INTO ohlc (
-        contract_id, exchange, name, month, year, date,
-        open, high, low, settle, volume, open_interest
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-    '''
+    cur.execute(table_statement)
 
     start = time()
 
-    print("START\tohlc")
+    print(f"START\t{table_name}")
 
     for date in dates:
         
-        with open(f"{processed_path}{date}_ohlc.csv", "r") as fd:
+        with open(f"{processed_path}{date}_{table_name}.csv", "r") as fd:
         
             records = reader(fd)
 
             try:
 
-                cur.executemany(statement, records)
+                cur.executemany(record_statement, records)
 
             except OperationalError as e:
 
-                print(f"ERROR\tohlc\t\t{e}")
+                print(f"ERROR\t{table_name}\t\t{e}")
 
-    print(f"FINISH\tohlc\t\t{time() - start: .3f}")
-
-
-def load_metadata(
-    cur:            str,
-    dates:          List[str],
-    processed_path: str
-):
-
-    cur.execute(
-        '''
-            CREATE TABLE IF NOT EXISTS metadata (
-                contract_id TEXT PRIMARY KEY,
-                from_date   TEXT,
-                to_date     TEXT
-            );
-        '''
-    )
-
-    statement = f'''
-        INSERT INTO metadata (contract_id, from_date, to_date)
-        VALUES (?, ?, ?);
-    '''
-
-    start = time()
-
-    print("START\tmetadata")
-
-    for date in dates:
-        
-        with open(f"{processed_path}{date}_metadata.csv", "r") as fd:
-        
-            records = reader(fd)
-
-            try:
-
-                cur.executemany(statement, records)
-
-            except OperationalError as e:
-
-                print(f"ERROR\tmetadata\t\t{e}")
-
-    print(f"FINISH\tmetadata\t\t{time() - start: .3f}")
+    print(f"FINISH\t{table_name}\t\t{time() - start: .3f}")
 
 
 def load_processed(dates):
@@ -116,8 +50,72 @@ def load_processed(dates):
     con = connect(db_path)
     cur = con.cursor()
 
-    load_ohlc(cur, dates, processed_path)
-    load_metadata(cur, processed_path)
+    # ohlc
+
+    table_statement = '''
+        CREATE TABLE IF NOT EXISTS ohlc (
+            contract_id     TEXT, 
+            exchange        TEXT,
+            name            TEXT,
+            month           TEXT, 
+            year            TEXT,
+            date            TEXT,
+            open            REAL,
+            high            REAL,
+            low             REAL,
+            settle          REAL,
+            volume          INTEGER,
+            open_interest   INTEGER
+            PRIMARY KEY(conract_id, date)
+        );
+    '''
+
+    record_statement = f'''
+        INSERT OR REPLACE INTO ohlc (
+            contract_id, exchange, name, month, year, date,
+            open, high, low, settle, volume, open_interest
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    '''
+
+    update_table(
+        cur,
+        dates,
+        processed_path,
+        "ohlc",
+        table_statement,
+        record_statement
+    )
+
+    # metadata
+
+    table_statement = '''
+        CREATE TABLE IF NOT EXISTS metadata (
+            contract_id TEXT PRIMARY KEY,
+            from_date   TEXT,
+            to_date     TEXT
+        );
+    '''
+
+    record_statement = f'''
+        INSERT INTO metadata (
+            contract_id, from_date, to_date
+        )
+        VALUES (?, ?, ?)
+        ON CONFLICT(contract_id) DO UPDATE SET
+            from_date = excluded.fromdate   WHERE from_date < excluded.from_date
+            to_date   = excluded.todate     WHERE to_date   > excluded.to_date
+        ;
+    '''
+
+    update_table(
+        cur,
+        dates,
+        processed_path,
+        "metadata",
+        table_statement,
+        record_statement
+    )
 
     con.commit()
     con.close()
