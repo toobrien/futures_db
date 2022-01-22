@@ -39,7 +39,7 @@ def update_table(
 
 def load_processed(dates):
 
-    config          = loads(open("./config", "r").read())
+    config          = loads(open("./config.json", "r").read())
     db_path         = config["database_path"]
     processed_path  = config["processed_path"]
     

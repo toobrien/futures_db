@@ -1,8 +1,10 @@
-from    argparse import ArgumentParser
+from    argparse        import ArgumentParser
 import  cme_extract
 import  cme_transform
-from    datetime import datetime
-from    load import load_processed
+from    datetime        import datetime
+from    json            import loads
+from    load            import load_processed
+from    os              import remove, walk
 import  srf_extract
 import  srf_transform
 
@@ -24,16 +26,16 @@ if __name__ == "__main__":
         ]
     )
 
-    parser.add_argument(
-        "--dates",
-        nargs = "*"
-    )
-    
+    parser.add_argument("--dates", "-d", nargs = "*")
+    parser.add_argument("--archive", "-a")
+    parser.add_argument("--clean", "-c")
+
     args = parser.parse_args()
 
     load    = False
-    dates   = parser.dates
-    sources = parser.sources
+    clean   = args.clean
+    dates   = args.dates
+    sources = args.sources
 
     for source in sources:
 
@@ -71,17 +73,38 @@ if __name__ == "__main__":
 
             pass
 
+    # insert records into database
+
     if load:
 
         if not dates:
 
             # default: load today's records
 
-            dates.append(
+            dates = [
                 datetime.strftime(
                     datetime.today(),
                     "%Y_%m_%d"
                 )
-            )
+            ]
 
         load_processed(dates)
+
+    # delete raw input and processed records, if necessary
+
+    if clean:
+
+        with open("./config.json", "r") as fd:
+
+            config = loads(fd.read())
+
+            for path in [ 
+                "input_path",
+                "processed_path" 
+            ]:
+
+                _, _, fns = walk(config[path])
+
+                for fn in fns:
+                    
+                    remove(f"{path}{fn}")
