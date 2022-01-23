@@ -105,8 +105,18 @@ def load_processed(dates):
         )
         VALUES (?, ?, ?)
         ON CONFLICT(contract_id) DO UPDATE SET
-            from_date = excluded.from_date
-            WHERE excluded.from_date < from_date
+            from_date = CASE WHEN excluded.from_date < from_date 
+                THEN 
+                    excluded.from_date 
+                ELSE
+                    from_date
+                END,
+            to_date = CASE WHEN excluded.to_date > to_date
+                THEN
+                    excluded.to_date
+                ELSE
+                    to_date
+                END
         ;
     '''
 
@@ -118,31 +128,6 @@ def load_processed(dates):
         table_statement,
         record_statement
     )
-
-    # metadata again, this time with to_date... annoying
-
-    record_statement = f'''
-        INSERT INTO metadata (
-            contract_id,
-            from_date, 
-            to_date
-        )
-        VALUES (?, ?, ?)
-        ON CONFLICT(contract_id) DO UPDATE SET
-            from_date = excluded.from_date
-            WHERE excluded.to_date > to_date
-        ;
-    '''
-
-    update_table(
-        cur,
-        dates,
-        processed_path,
-        "metadata",
-        table_statement,
-        record_statement
-    )
-    
 
     con.commit()
     con.close()

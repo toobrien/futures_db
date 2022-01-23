@@ -105,12 +105,16 @@ if __name__ == "__main__":
             config = loads(fd.read())
 
             for path in [ 
-                "input_path",
-                "processed_path"
+                config["input_path"],
+                config["processed_path"]
             ]:
 
-                _, _, fns = walk(config[path])
+                bundles = walk(path)
 
-                for fn in fns:
+                for _, _, fns in bundles:
                     
-                    remove(f"{path}{fn}")
+                    for fn in fns:
+                        
+                        if fn != ".gitignore":
+                        
+                            remove(f"{path}{fn}")
