@@ -24,7 +24,7 @@ def get_files(cmd: str):
         
         ohlc_url += f"&download_type=partial"
 
-    print(f"START\t{cmd}")
+    print(f"START\tsrf extract\t{cmd}")
 
     start_all = time()
 
@@ -35,7 +35,7 @@ def get_files(cmd: str):
 
         stem = url.split("?")[0]
 
-        print(f"GET\t{stem}\tSTART")
+        print(f"START\tGET {stem}")
 
         start = time()
 
@@ -48,9 +48,9 @@ def get_files(cmd: str):
 
         ZipFile(bytes).extractall(input_path)
 
-        print(f"GET\t{stem}\tFINISH\t{time() - start: 0.3f}")
+        print(f"FINISH\tGET {stem}\t{time() - start: 0.3f}")
 
-    print(f"FINISH\t{cmd}\t{time() - start_all: 0.3f}")
+    print(f"FINISH\tsrf extract\t{cmd}\t{time() - start_all: 0.3f}")
 
 
 if __name__ == "__main__":

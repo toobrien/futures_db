@@ -215,7 +215,7 @@ def write_csv():
         
         if m:
 
-            print(f"processing {m[0]}\tSTART")
+            print(f"START\tprocessing {m[0]}")
             
             start = time()
 
@@ -225,11 +225,11 @@ def write_csv():
                 enabled_contracts   = enabled_contracts
             )
 
-            print(f"processing {m[0]}\tFINISH\t{time() - start: 0.4f}")
+            print(f"FINISH\tprocessing {m[0]}\t{time() - start: 0.4f}")
 
     # write processed metadata
 
-    print(f"processing SRF_metadata.csv")
+    print(f"START\tprocessing SRF_metadata.csv")
 
     start = time()
 
@@ -239,8 +239,8 @@ def write_csv():
         enabled_contracts   = enabled_contracts
     )
 
-    print(f"processing SRF_metadata.csv\tFINISH\t{time() - start: 0.4f}")
-    print(f"finish ALL\t\t\t\t{time() - start_all: 0.4f}")
+    print(f"FINISH\tprocessing SRF_metadata.csv\t{time() - start: 0.4f}")
+    print(f"FINISH\tsrf transform\t\t\t\t{time() - start_all: 0.4f}")
         
 
 if __name__=="__main__":

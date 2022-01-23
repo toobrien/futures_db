@@ -21,18 +21,28 @@ if __name__ == "__main__":
             "cme_all",
             "cme_latest",
             "srf_all",
-            "srf_latest",
-            "matrix"
+            "srf_latest"
         ]
     )
 
     parser.add_argument("--dates", "-d", nargs = "*")
-    parser.add_argument("--archive", "-a")
-    parser.add_argument("--clean", "-c")
+    parser.add_argument(
+        "--archive",
+        "-a",
+        dest    = "archive",
+        action  = "store_true"
+    )
+    parser.add_argument(
+        "--clean",
+        "-c",
+        dest    = "clean",
+        action  = "store_true"
+    )
 
     args = parser.parse_args()
 
     load    = False
+    archive = args.archive
     clean   = args.clean
     dates   = args.dates
     sources = args.sources
@@ -69,10 +79,6 @@ if __name__ == "__main__":
             srf_transform.write_csv()
             load = True
 
-        elif source == "matrix":
-
-            pass
-
     # insert records into database
 
     if load:
@@ -100,7 +106,7 @@ if __name__ == "__main__":
 
             for path in [ 
                 "input_path",
-                "processed_path" 
+                "processed_path"
             ]:
 
                 _, _, fns = walk(config[path])

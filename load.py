@@ -65,8 +65,8 @@ def load_processed(dates):
             low             REAL,
             settle          REAL,
             volume          INTEGER,
-            open_interest   INTEGER
-            PRIMARY KEY(conract_id, date)
+            open_interest   INTEGER,
+            PRIMARY KEY(contract_id, date)
         );
     '''
 
@@ -99,12 +99,14 @@ def load_processed(dates):
 
     record_statement = f'''
         INSERT INTO metadata (
-            contract_id, from_date, to_date
+            contract_id,
+            from_date, 
+            to_date
         )
         VALUES (?, ?, ?)
         ON CONFLICT(contract_id) DO UPDATE SET
-            from_date = excluded.fromdate   WHERE from_date < excluded.from_date
-            to_date   = excluded.todate     WHERE to_date   > excluded.to_date
+            from_date = excluded.from_date
+            WHERE excluded.from_date < from_date
         ;
     '''
 
@@ -116,6 +118,31 @@ def load_processed(dates):
         table_statement,
         record_statement
     )
+
+    # metadata again, this time with to_date... annoying
+
+    record_statement = f'''
+        INSERT INTO metadata (
+            contract_id,
+            from_date, 
+            to_date
+        )
+        VALUES (?, ?, ?)
+        ON CONFLICT(contract_id) DO UPDATE SET
+            from_date = excluded.from_date
+            WHERE excluded.to_date > to_date
+        ;
+    '''
+
+    update_table(
+        cur,
+        dates,
+        processed_path,
+        "metadata",
+        table_statement,
+        record_statement
+    )
+    
 
     con.commit()
     con.close()
