@@ -1,0 +1,21 @@
+{
+    "cme": {
+        "cme_ftp": "ftp.cmegroup.com",
+        "cme_files": [
+            "cbt.settle.s.csv",
+            "cme.settle.s.csv",
+            "comex.settle.s.csv",
+            "nymex.settle.s.csv"
+        ]
+    },
+    "srf": {
+        "nasdaq_api_key":   "YOUR_API_KEY",
+        "ohlc_url":         "https://data.nasdaq.com/api/v3/databases/SRF/data",
+        "metadata_url":     "https://data.nasdaq.com/api/v3/databases/SRF/metadata"
+    },
+    "cboe":                 {},
+    "contract_settings":    "./contracts.csv",
+    "input_path":           "./input/",
+    "processed_path":       "./processed/",
+    "database_path":        "./futures.db"
+}

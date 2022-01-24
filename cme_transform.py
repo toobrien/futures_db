@@ -86,10 +86,10 @@ def write_csv():
             # 12 OpeningPrice   open                float
             # 13 SettlePrice    settle              float
             # 14 SettleDelta    delta settle?       float
-            # 15 HighLimit      high?               float
-            # 16 LowLimit       low?                float
-            # 17 DHighPrice     ?                   float
-            # 18 DLowPrice      ?                   float
+            # 15 HighLimit      high bid/offer?     float
+            # 16 LowLimit       low bid/offer?      float
+            # 17 DHighPrice     high                float
+            # 18 DLowPrice      low                 float
             # 19 HighBid        ?                   float    
             # 20 LowBid         ?                   float
             # 21 PrevDayVol     volume              int
@@ -136,9 +136,9 @@ def write_csv():
                 id          =   f"{exchange}_{symbol}{month}{year}"
                 date        =   row[0]
                 settle      =   row[13] if row[13] != "" else "NULL"
-                open_       =   row[12] if row[12] != "" else settle
-                high        =   row[15] if row[15] != "" else settle
-                low         =   row[16] if row[16] != "" else settle
+                open_       =   row[12] if row[12] != "" else "NULL"
+                high        =   row[17] if row[17] != "" else "NULL"
+                low         =   row[18] if row[18] != "" else "NULL"
                 vol         =   row[21] if row[21] != "" else "NULL"
                 oi          =   row[22] if row[22] != "" else "NULL"
 
