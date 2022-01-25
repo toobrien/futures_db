@@ -1,10 +1,11 @@
-from    argparse        import ArgumentParser
+from    argparse                import ArgumentParser
+import  cboe_extract_transform
 import  cme_extract
 import  cme_transform
-from    datetime        import datetime
-from    json            import loads
-from    load            import load_processed
-from    os              import remove, walk
+from    datetime                import datetime
+from    json                    import loads
+from    load                    import load_processed
+from    os                      import remove, walk
 import  srf_extract
 import  srf_transform
 
@@ -46,6 +47,11 @@ if __name__ == "__main__":
     clean   = args.clean
     dates   = args.dates
     sources = args.sources
+    
+    today   = datetime.strftime(
+                    datetime.today(),
+                    "%Y_%m_%d"
+            )
 
     for source in sources:
 
@@ -56,6 +62,7 @@ if __name__ == "__main__":
         elif source == "cboe_latest":
 
             load = True
+            cboe_extract_transform.write_csv(today)
 
         elif source == "cme_all":
 
@@ -87,12 +94,7 @@ if __name__ == "__main__":
 
             # default: load today's records
 
-            dates = [
-                datetime.strftime(
-                    datetime.today(),
-                    "%Y_%m_%d"
-                )
-            ]
+            dates = [ today ]
 
         load_processed(dates)
 
@@ -118,3 +120,7 @@ if __name__ == "__main__":
                         if fn != ".gitignore":
                         
                             remove(f"{path}{fn}")
+
+    if archive:
+
+        pass

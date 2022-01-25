@@ -9,7 +9,7 @@
         ]
     },
     "srf": {
-        "nasdaq_api_key":   "YOUR_API_KEY",
+        "nasdaq_api_key":   "QGPR_CPSfWJshKY2FxBH",
         "ohlc_url":         "https://data.nasdaq.com/api/v3/databases/SRF/data",
         "metadata_url":     "https://data.nasdaq.com/api/v3/databases/SRF/metadata"
     },

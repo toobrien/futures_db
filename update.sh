@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python update.py srf_all cme_latest --clean 
+python update.py srf_all cme_latest cboe_latest --clean 
