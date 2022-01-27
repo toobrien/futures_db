@@ -1,0 +1,528 @@
+{
+    "2 Yr Note": {
+        "srf": "TU",
+        "globex": "ZT",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "5 Yr Note": {
+        "srf": "FV",
+        "globex": "ZF",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "10 Yr Note": {
+        "srf": "TY",
+        "globex": "ZN",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "30 Day Federal Funds": {
+        "srf": "FF",
+        "globex": "ZQ",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Australian Dollar": {
+        "srf": "AD",
+        "globex": "6A",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "British Pound": {
+        "srf": "BP",
+        "globex": "6B",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Canadian Dollar": {
+        "srf": "CD",
+        "globex": "6C",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Copper": {
+        "srf": "HG",
+        "globex": "HG",
+        "exchange": "COMEX",
+        "scale": 1.0,
+        "enabled": "True"
+    },
+    "Corn": {
+        "srf": "C",
+        "globex": "ZC",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Crude Oil": {
+        "srf": "CL",
+        "globex": "CL",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "E-mini NASDAQ 100": {
+        "srf": "NQ",
+        "globex": "NQ",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "E-mini S&P 500": {
+        "srf": "ES",
+        "globex": "ES",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "E-mini S&P MidCap 400": {
+        "srf": "MD",
+        "globex": "EMD",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Euro FX": {
+        "srf": "EC",
+        "globex": "6E",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Eurodollar": {
+        "srf": "ED",
+        "globex": "GE",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Gold": {
+        "srf": "GC",
+        "globex": "GC",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Japanese Yen": {
+        "srf": "JY",
+        "globex": "6J",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "KC HRW Wheat": {
+        "srf": "KW",
+        "globex": "KE",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": "True"
+    },
+    "Lean Hog": {
+        "srf": "LN",
+        "globex": "HE",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": "True"
+    },
+    "Live Cattle": {
+        "srf": "LC",
+        "globex": "LE",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Mexican Peso": {
+        "srf": "MP",
+        "globex": "6M",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Natural Gas (Henry Hub) Physical": {
+        "srf": "NG",
+        "globex": "NG",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "New Zealand Dollars": {
+        "srf": "NE",
+        "globex": "6N",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Nikkei/USD": {
+        "srf": "NK",
+        "globex": "NKD",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "NY Harbor ULSD": {
+        "srf": "HO",
+        "globex": "HO",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Oats": {
+        "srf": "O",
+        "globex": "ZO",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Palladium": {
+        "srf": "PA",
+        "globex": "PA",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "platinum": {
+        "srf": "PL",
+        "globex": "PL",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "RBOB Gasoline Physical": {
+        "srf": "RB",
+        "globex": "RB",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Russell 1000 Index Mini": {
+        "srf": "RS1",
+        "globex": "RS1",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Russell 2000 Index Mini": {
+        "srf":  "RTY",
+        "globex": "RTY",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "S&P 500": {
+        "srf": "SP",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Silver": {
+        "srf": "SI",
+        "globex": "SI",
+        "exchange": "COMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Soybean": {
+        "srf": "S",
+        "globex": "ZS",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Soybean Meal": {
+        "srf": "SM",
+        "globex": "ZM",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Soybean Oil": {
+        "srf": "BO",
+        "glboex": "ZL",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Swiss Franc": {
+        "srf": "SF",
+        "globex": "6S",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "U.S. Treasury Bond": {
+        "srf": "US",
+        "globex": "ZB",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Wheat": {
+        "srf": "W",
+        "globex": "ZW",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Brent Crude": {
+        "srf": "B",
+        "globex": "BZ",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Cocoa": {
+        "srf": "CC",
+        "globex": "CJ",
+        "exchange": "NYBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Coffee C": {
+        "srf": "KC",
+        "globex": "KT",
+        "exchange": "NYBOT",
+        "scale": 100.0,
+        "enabled": true
+    },
+    "Cotton No. 2": {
+        "srf": "CT",
+        "globex": "TT",
+        "exchange": "NYBOT",
+        "scale": 100.0,
+        "enabled": true
+    },
+    "Gas Oil": {
+        "srf": "G",
+        "globex": "GX",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Heating Oil": {
+        "srf": "O",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Orange Juice": {
+        "srf": "OJ",
+        "exchange": "NYBOT",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Rotterdam Coal": {
+        "srf": "ATW",
+        "globex": "MTF",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Russell 1000 Index Mini: Discontinued": {
+        "srf": "RF",
+        "globex": "RS1",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Russell 2000 Index Mini: Discontinued": {
+        "srf": "TF",
+        "globex": "RTY",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Sm GBP/USD": {
+        "srf": "MP",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Sugar No. 11": {
+        "srf": "SB",
+        "globex": "YO",
+        "exchange": "NYBOT",
+        "scale": 100.0,
+        "enabled": true
+    },
+    "UK Natural Gas": {
+        "srf": "M",
+        "globex": "UKG",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "US Dollar Index": {
+        "srf": "DX",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": "False"
+    },
+    "WTI Crude": {
+        "srf": "T",
+        "exchange": "ICE",
+        "scale": 1.0,
+        "enabled": false
+    },
+    "Three-Month SOFR": {
+        "globex": "SR3",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Ultra 10-Year U.S. Treasure Note": {
+        "globex": "TN",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enbaled": true
+    },
+    "Ultra U.S. Treasury Bond": {
+        "globex": "UB",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "One-Month SOFR": {
+        "globex": "SR1",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    }, 
+    "Mont Belvieu LDH Propane": {
+        "globex": "B0",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Russian Ruble": {
+        "globex": "6R",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": "True"
+    },
+    "Feeder Cattle": {
+        "globex": "GF",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Dow Jones Real Estate": {
+        "globex": "RX",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Brazilian Real": {
+        "globex": "6L",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Class III Milk": {
+        "globex": "DC",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Chicago Ethanol (Platts)": {
+        "globex": "CU",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "3-Year T-Note": {
+        "globex": "Z3N",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Cash-Settled Cheese": {
+        "globex": "CSC",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Class IV Milk": {
+        "globex": "DK",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "South African Rand": {
+        "globex": "6Z",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Black Sea Wheat Financially Settled (Platts)": {
+        "globex": "BWF",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Dutch TTF Natural Gas Calendar Month": {
+        "globex": "TTF",
+        "exchange": "NYMEX",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Cash-Settled Butter": {
+        "globex": "CB",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Nonfat Dry Milk": {
+        "globex": "GNF",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Rough Rice": {
+        "globex": "ZR",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Black Sea Corn Financially Settled (Platts)": {
+        "globex": "BCF",
+        "exchange": "CBOT",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Ether": {
+        "globex": "ETH",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Bitcoin": {
+        "globex": "BTC",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "Dry Whey": {
+        "globex": "DY",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
+    },
+    "CBOT Dow Jones Ind Avg (DJIA)": {
+        "srf": "DJ",
+        "exchange": "CBOT",
+        "enabled": false
+    },
+    "CBOE Volatility Index": {
+        "cboe": "VX",
+        "exchange": "CFE",
+        "enabled": true
+    }
+}

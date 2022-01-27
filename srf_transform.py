@@ -1,6 +1,5 @@
 from csv            import reader, writer
 from datetime       import datetime
-from distutils.util import strtobool
 from json           import loads
 from os             import listdir
 from re             import match
@@ -15,27 +14,17 @@ def get_id(
 
     id_parts = id.split("_") 
     
-    name = id_parts[1][:-5]
-
-    if name in enabled_contracts:
-
-        contract_details = enabled_contracts[name]
-
-        exchange    = contract_details["exchange"]
-        name        = contract_details["globex_symbol"]
-        month       = id_parts[1][-5:-4]
-        year        = id_parts[1][-4:]
-        new_id      = f"{exchange}_{name}{month}{year}"
-        enabled     = contract_details["enabled"]
-
-    else:
-
-        exchange    = None
-        name        = None
-        month       = None
-        year        = None
-        new_id      = None
-        enabled     = False
+    name                = id_parts[1][:-5]
+    exchange            = id_parts[0]
+    exchange_contracts  = enabled_contracts[exchange]
+    contract_details    = exchange_contracts[name]
+    
+    exchange    = contract_details["exchange"]
+    name        = contract_details["globex"] if "globex" in contract_details else contract_details["srf"]
+    month       = id_parts[1][-5:-4]
+    year        = id_parts[1][-4:]
+    new_id      = f"{exchange}_{name}{month}{year}"
+    enabled     = contract_details["enabled"]
 
     return ( exchange, name, month, year, new_id, enabled )
 
@@ -176,8 +165,32 @@ def write_csv():
     input_path          = config["input_path"]
     output_path         = config["processed_path"]
     files               = listdir(input_path)
-    contract_settings   = config["contract_settings"]
-    enabled_contracts   = {}
+    contract_settings   = loads(open(config["contract_settings"], "r").read())
+
+    # map enabled contracts back to SRF exchanges (i.e. "CME" or "ICE")
+    # to help disambiguate "O" (Oats) from "O" (heating oil) in get_id()
+
+    enabled_contracts = {
+        "CME": {},
+        "ICE": {}
+    }
+
+    for _, settings in contract_settings.items():
+
+        ICE_EXCHANGES = [ "ICE", "NYBOT" ]
+
+        if "srf" in settings:
+
+            symbol = settings["srf"]
+
+            if settings["exchange"] in ICE_EXCHANGES:
+
+                enabled_contracts["ICE"][symbol] = settings
+
+            else:
+
+                enabled_contracts["CME"][symbol] = settings
+
 
     metadata_input_path = f"{input_path}SRF_metadata.csv"
 
@@ -185,27 +198,6 @@ def write_csv():
                             datetime.today(),
                             "%Y_%m_%d"
                         )
-
-    # populate enabled contracts
-
-    with open(contract_settings, "r") as fd:
-
-        records = reader(fd)
-
-        next(records)
-
-        for record in records:
-
-            srf_symbol      = record[1]
-            globex_symbol   = record[2]
-            exchange        = record[3]
-            enabled         = strtobool(record[4])
-
-            enabled_contracts[srf_symbol] = {
-                "globex_symbol":    globex_symbol,
-                "exchange":         exchange,
-                "enabled":          enabled
-            }
 
     # write processed ohlc
 

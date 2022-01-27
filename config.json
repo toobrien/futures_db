@@ -9,12 +9,12 @@
         ]
     },
     "srf": {
-        "nasdaq_api_key":   "QGPR_CPSfWJshKY2FxBH",
+        "nasdaq_api_key":   "3hJyoAvnfbBWgang2kyG",
         "ohlc_url":         "https://data.nasdaq.com/api/v3/databases/SRF/data",
         "metadata_url":     "https://data.nasdaq.com/api/v3/databases/SRF/metadata"
     },
     "cboe":                 {},
-    "contract_settings":    "./contracts.csv",
+    "contract_settings":    "./contract_settings.json",
     "input_path":           "./input/",
     "processed_path":       "./processed/",
     "database_path":        "./futures.db"

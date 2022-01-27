@@ -24,16 +24,14 @@ def write_csv():
     config              = loads(open("./config.json", "r").read())
     input_path          = config["input_path"]
     processed_path      = config["processed_path"]
-    contract_settings   = reader(open(config["contract_settings"], "r"))
-    
-    x = next(contract_settings) # skip headers
+    contract_settings   = loads(open(config["contract_settings"], "r").read())
 
     # globex symbol : exchange
 
     enabled_contracts = {
-        row[2] : row[3]
-        for row in contract_settings
-        if bool(row[4])
+        settings["globex"] : settings
+        for contract, settings in contract_settings.items()
+        if "globex" in settings
     }
 
     ohlc = [
@@ -116,7 +114,7 @@ def write_csv():
                     continue
 
                 symbol   = row[1]
-                exchange = enabled_contracts[symbol]
+                exchange = enabled_contracts[symbol]["exchange"]
                 delivery = row[5]
                 year     = delivery[0:4]
                 month    = None
@@ -133,14 +131,16 @@ def write_csv():
 
                 # propagage settle for contracts that didn't trade
 
+                scale = enabled_contracts[symbol]["scale"]
+
                 id          =   f"{exchange}_{symbol}{month}{year}"
                 date        =   row[0]
-                settle      =   row[13] if row[13] != "" else "NULL"
-                open_       =   row[12] if row[12] != "" else "NULL"
-                high        =   row[17] if row[17] != "" else "NULL"
-                low         =   row[18] if row[18] != "" else "NULL"
-                vol         =   row[21] if row[21] != "" else "NULL"
-                oi          =   row[22] if row[22] != "" else "NULL"
+                settle      =   str(float(row[13]) * scale) if row[13] != "" else "NULL"
+                open_       =   str(float(row[12]) * scale) if row[12] != "" else "NULL"
+                high        =   str(float(row[17]) * scale) if row[17] != "" else "NULL"
+                low         =   str(float(row[18]) * scale) if row[18] != "" else "NULL"
+                vol         =   row[21]                     if row[21] != "" else "NULL"
+                oi          =   row[22]                     if row[22] != "" else "NULL"
 
                 from_date = row[0]  # see note below
                 to_date =   row[10]
