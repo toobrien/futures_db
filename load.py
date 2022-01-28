@@ -12,13 +12,14 @@ def update_table(
     processed_path:     str,
     table_name:         str,
     table_statement:    str,
-    record_statement:   str
+    record_statement:   str,
+    LOG_FMT
 ):
     cur.execute(table_statement)
 
     start = time()
 
-    print(f"START\t{table_name}")
+    print(LOG_FMT.format("load", "start", "", f"update_table {table_name}", 0))
 
     for date in dates:
         
@@ -34,18 +35,19 @@ def update_table(
 
                 print(f"ERROR\t{table_name}\t\t{e}")
 
-    print(f"FINISH\t{table_name}\t\t{time() - start: .3f}")
+    print(LOG_FMT.format("load", "finish", f"{time() - start: 0.1f}", f"update_table {table_name}", 0))
 
 
 def load_processed(dates):
 
     config          = loads(open("./config.json", "r").read())
+    LOG_FMT         = config["log_fmt"]
     db_path         = config["database_path"]
     processed_path  = config["processed_path"]
     
     start_all = time()
 
-    print("START\tload_processed")
+    print(LOG_FMT.format("load", "start", "", f"load_processed {', '.join(dates)}", 0))
 
     con = connect(db_path)
     cur = con.cursor()
@@ -84,7 +86,8 @@ def load_processed(dates):
         processed_path,
         "ohlc",
         table_statement,
-        record_statement
+        record_statement,
+        LOG_FMT
     )
 
     # metadata
@@ -126,19 +129,20 @@ def load_processed(dates):
         processed_path,
         "metadata",
         table_statement,
-        record_statement
+        record_statement,
+        LOG_FMT
     )
 
     con.commit()
     con.close()
 
-    print(f"FINISHED\tload_processed\t{time() - start_all:0.2f}")
+    print(LOG_FMT.format("load", "finish", f"{time() - start_all: 0.1f}", f"load_processed {', '.join(dates)}", 0))
 
 
 if __name__ == "__main__":
 
     today = datetime.strftime(
-                "%Y_%m_%d",
+                "%Y-%m-%d",
                 datetime.today()
             )
 

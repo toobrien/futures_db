@@ -1,15 +1,18 @@
-from ftplib import FTP
-from json import loads
-from sys import argv
-from time import time
+from datetime   import datetime
+from ftplib     import FTP
+from json       import loads
+from sys        import argv
+from time       import time
 
 
 def get_files(argv):
 
-    print("START\tcme_extract")
+    config      = loads(open("./config.json", "r").read())
+    DATE_FMT    = config["date_fmt"]
+    LOG_FMT     = config["log_fmt"]
+    input_path  = config["input_path"]
 
-    config = loads(open("./config.json", "r").read())
-    input_path = config["input_path"]
+    today       = datetime.strftime(datetime.today(), DATE_FMT)
 
     ftp = FTP(config["cme"]["cme_ftp"])
     ftp.login()
@@ -17,13 +20,15 @@ def get_files(argv):
 
     cmd = argv[1]
 
+    print(LOG_FMT.format("cme_extract", "start", "", cmd, 0))
+
     if cmd == "list":
 
         ftp.retrlines("LIST")
 
     elif cmd == "get":
 
-        write(argv[2], ftp, input_path)
+        write(argv[2], today, ftp, input_path, LOG_FMT)
 
     elif cmd == "all":
     
@@ -33,24 +38,24 @@ def get_files(argv):
 
         for fn in files:
         
-            write(fn, ftp, input_path)
+            write(fn, today, ftp, input_path, LOG_FMT)
 
-        print(f"FINISH\tcme_extract\t\t{time() - start_all: 0.2f}")
+        print(LOG_FMT.format("cme_extract", "finish", f"{time() - start_all: 0.1f}", argv[1], 0))
 
     ftp.quit()
 
 
-def write(fn, ftp, input_path):
+def write(fn, today, ftp, input_path, LOG_FMT):
 
-        with open(f"{input_path}{fn}", "wb") as fd:
+        with open(f"{input_path}{today}_{fn}", "wb") as fd:
 
-            print(f"START\tRETR {fn}")
+            print(LOG_FMT.format("cme_extract", "start", "", f"RETR {fn}", 0))
             
             start = time()
 
             ftp.retrbinary(f"RETR {fn}", fd.write)
             
-            print(f"FINISH\tRETR {fn}\t{time() - start: 0.4f}")
+            print(LOG_FMT.format("cme_extract", "finish", f"{time() - start: 0.1f}", f"RETR {fn}", 0))
 
 
 if __name__ == "__main__":

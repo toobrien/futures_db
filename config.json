@@ -9,13 +9,16 @@
         ]
     },
     "srf": {
-        "nasdaq_api_key":   "3hJyoAvnfbBWgang2kyG",
+        "nasdaq_api_key":   "YOUR_API_KEY_HERE",
         "ohlc_url":         "https://data.nasdaq.com/api/v3/databases/SRF/data",
         "metadata_url":     "https://data.nasdaq.com/api/v3/databases/SRF/metadata"
     },
     "cboe":                 {},
     "contract_settings":    "./contract_settings.json",
+    "archive_path":         "./archive/",
     "input_path":           "./input/",
     "processed_path":       "./processed/",
-    "database_path":        "./futures.db"
+    "database_path":        "./futures.db",
+    "date_fmt":             "%Y-%m-%d",
+    "log_fmt":              "{0: <20}{1: <10}{2: <10}{3: <100}{4: 10}"
 }

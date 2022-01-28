@@ -1,32 +1,39 @@
 from requests   import get
 from csv        import reader, writer
-from datetime   import date, datetime
+from datetime   import datetime
 from json       import loads
-
+from time       import time
 
 def write_csv(yyyy_mm_dd: str):
 
     # extract
 
     config      = loads(open("./config.json", "r").read())
+    LOG_FMT     = config["log_fmt"]
     out_path    = config["processed_path"]
 
     results = []
 
+    print(LOG_FMT.format("cboe_et", "start", "", "", 0))
+
     url = f"https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={yyyy_mm_dd}"
-    
+
+    print(LOG_FMT.format("cboe_et", "start", "", f"GET {url}", 0))
+
+    start_all = time()
+
     res = get(url)
 
     if res.status_code != 200:
 
-        print(f"ERROR\tGET {url}\t{res.status_code}")
-        print(res.text)
+        print(LOG_FMT.format("cboe_et", "error", f"{time() - start_all: 0.1f}", f"GET {url, res.status_code}", 0))
+        #print(res.text)
 
         return
 
     else:
 
-        print(f"FINISH\tGET {url}\t{res.status_code}")
+        print(LOG_FMT.format("cboe_et", "finish", f"{time() - start_all: 0.1f}", f"GET {url}", res.status_code))
 
         results = res.text.splitlines()
 
@@ -94,7 +101,9 @@ def write_csv(yyyy_mm_dd: str):
 
         writer(fd).writerows(metadata)
 
+    print(LOG_FMT.format("cboe_et", "finish", f"{time() - start_all: 0.1f}", "", res.status_code))
+
 
 if __name__ == "__main__":
 
-    write_csv(datetime.today().strftime("%Y_%m_%d"))
+    write_csv(datetime.today().strftime("%Y-%m-%d"))

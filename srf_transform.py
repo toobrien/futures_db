@@ -6,7 +6,6 @@ from re             import match
 from time           import time
 from typing         import Dict, Tuple
 
-
 def get_id(
     id:                 str,
     enabled_contracts:  Dict[str , Dict]
@@ -159,13 +158,17 @@ def process_metadata(
 
 def write_csv():
 
-    start_all = time()
-
     config              = loads(open("./config.json", "r").read())
+    LOG_FMT             = config["log_fmt"]
+    DATE_FMT            = config["date_fmt"]
     input_path          = config["input_path"]
     output_path         = config["processed_path"]
     files               = listdir(input_path)
     contract_settings   = loads(open(config["contract_settings"], "r").read())
+
+    print(LOG_FMT.format("srf_transform", "start", "", "all", 0))
+
+    start_all = time()
 
     # map enabled contracts back to SRF exchanges (i.e. "CME" or "ICE")
     # to help disambiguate "O" (Oats) from "O" (heating oil) in get_id()
@@ -194,10 +197,10 @@ def write_csv():
 
     metadata_input_path = f"{input_path}SRF_metadata.csv"
 
-    yyyy_mm_dd          = datetime.strftime(
-                            datetime.today(),
-                            "%Y_%m_%d"
-                        )
+    today = datetime.strftime(
+                datetime.today(),
+                DATE_FMT
+            )
 
     # write processed ohlc
 
@@ -207,32 +210,32 @@ def write_csv():
         
         if m:
 
-            print(f"START\tprocessing {m[0]}")
+            print(LOG_FMT.format("srf_transform", "start", "", m[0], 0))
             
             start = time()
 
             process_ohlc(
                 input_path          = f"{input_path}{m[0]}",
-                output_path         = f"{output_path}{yyyy_mm_dd}_ohlc.csv",
+                output_path         = f"{output_path}{today}_ohlc.csv",
                 enabled_contracts   = enabled_contracts
             )
 
-            print(f"FINISH\tprocessing {m[0]}\t{time() - start: 0.4f}")
+            print(LOG_FMT.format("srf_transform", "finish", f"{time() - start: 0.1f}", m[0], 0))
 
     # write processed metadata
 
-    print(f"START\tprocessing SRF_metadata.csv")
+    print(LOG_FMT.format("srf_transform", "start", "", "SRF_metadata.csv", 0))
 
     start = time()
 
     process_metadata(
         input_path          = metadata_input_path,
-        output_path         = f"{output_path}{yyyy_mm_dd}_metadata.csv",
+        output_path         = f"{output_path}{today}_metadata.csv",
         enabled_contracts   = enabled_contracts
     )
 
-    print(f"FINISH\tprocessing SRF_metadata.csv\t{time() - start: 0.4f}")
-    print(f"FINISH\tsrf transform\t\t\t\t{time() - start_all: 0.4f}")
+    print(LOG_FMT.format("srf_transform", "finish", f"{time() - start: 0.1f}", "SRF_metadata.csv", 0))
+    print(LOG_FMT.format("srf_transform", "finish", f"{time() - start_all: 0.1f}", "all", 0))
         
 
 if __name__=="__main__":

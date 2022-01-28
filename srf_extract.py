@@ -1,9 +1,9 @@
-from io import BytesIO
-from json import loads
-from requests import get
-from sys import argv
-from time import time
-from zipfile import ZipFile
+from io         import BytesIO
+from json       import loads
+from requests   import get
+from sys        import argv
+from time       import time
+from zipfile    import ZipFile
 
 
 # srf reference: https://data.nasdaq.com/data/SRF-Reference-Futures/usage/export
@@ -11,6 +11,7 @@ from zipfile import ZipFile
 def get_files(cmd: str):
 
     config          = loads(open("./config.json", "r").read())
+    LOG_FMT         = config["log_fmt"]
     input_path      = config["input_path"]
     nasdaq_api_key  = config["srf"]["nasdaq_api_key"]
     ohlc_url        = f"{config['srf']['ohlc_url']}?api_key={nasdaq_api_key}"
@@ -24,7 +25,7 @@ def get_files(cmd: str):
         
         ohlc_url += f"&download_type=partial"
 
-    print(f"START\tsrf extract\t{cmd}")
+    print(LOG_FMT.format("srf_extract", "start", "", cmd, 0))
 
     start_all = time()
 
@@ -35,7 +36,7 @@ def get_files(cmd: str):
 
         stem = url.split("?")[0]
 
-        print(f"START\tGET {stem}")
+        print(LOG_FMT.format("srf_extract", "start", "", f"GET {stem}", 0))
 
         start = time()
 
@@ -48,9 +49,9 @@ def get_files(cmd: str):
 
         ZipFile(bytes).extractall(input_path)
 
-        print(f"FINISH\tGET {stem}\t{time() - start: 0.3f}")
+        print(LOG_FMT.format("srf_extract", "finish", f"{time() - start: 0.1f}", f"GET {stem}", 200))
 
-    print(f"FINISH\tsrf extract\t{cmd}\t{time() - start_all: 0.3f}")
+    print(LOG_FMT.format("srf_extract", "finish", f"{time() - start_all: 0.1f}", cmd, 0))
 
 
 if __name__ == "__main__":

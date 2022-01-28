@@ -1,6 +1,7 @@
 from csv        import reader, writer
 from datetime   import datetime
 from json       import loads
+from time       import time
 
 
 CALENDAR = {
@@ -19,12 +20,18 @@ CALENDAR = {
 }
 
 
-def write_csv():
+def write_csv(date: str):
 
     config              = loads(open("./config.json", "r").read())
+    LOG_FMT             = config["log_fmt"]
+    DATE_FMT            = config["date_fmt"]
     input_path          = config["input_path"]
     processed_path      = config["processed_path"]
     contract_settings   = loads(open(config["contract_settings"], "r").read())
+
+    start_all = time()
+
+    print(LOG_FMT.format("cme_transform", "start", "", date, 0))
 
     # globex symbol : exchange
 
@@ -65,7 +72,7 @@ def write_csv():
 
     for fn in config["cme"]["cme_files"]:
 
-        with open(f"{input_path}{fn}", "r") as fd:
+        with open(f"{input_path}{date}_{fn}", "r") as fd:
 
             # unprocessed cme record
 
@@ -183,7 +190,7 @@ def write_csv():
 
     yyyy_mm_dd = datetime.strftime(
                     datetime.today(),
-                    "%Y_%m_%d"
+                    DATE_FMT
                 )
 
     for record_type, records in [
@@ -196,6 +203,7 @@ def write_csv():
             w = writer(fd, delimiter = ",")
             w.writerows(records)
 
+    print(LOG_FMT.format("cme_transform", "finish", f"{time() - start_all: 0.1f}", date, 0))
 
 if __name__ == "__main__":
 

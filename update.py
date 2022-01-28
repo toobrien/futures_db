@@ -1,20 +1,23 @@
-from    argparse                import ArgumentParser
-import  cboe_extract_transform
+from    argparse        import ArgumentParser
+import  cboe_et
 import  cme_extract
 import  cme_transform
-from    datetime                import datetime
-from    json                    import loads
-from    load                    import load_processed
-from    os                      import remove, walk
+from    datetime        import datetime
+from    json            import loads
+from    load            import load_processed
+from    os              import remove, walk
 import  srf_extract
 import  srf_transform
+from    time            import time
+from    zipfile         import ZipFile
+
 
 if __name__ == "__main__":
 
     parser = ArgumentParser()
 
     parser.add_argument(
-        "sources",
+        "--sources",
         nargs = "*",
         choices = [
             "cboe_all", 
@@ -25,13 +28,16 @@ if __name__ == "__main__":
             "srf_latest"
         ]
     )
-
     parser.add_argument("--dates", "-d", nargs = "*")
     parser.add_argument(
         "--archive",
         "-a",
-        dest    = "archive",
-        action  = "store_true"
+        nargs = 1,
+        choices = [
+            "input",
+            "processed",
+            "all"
+        ]
     )
     parser.add_argument(
         "--clean",
@@ -43,15 +49,23 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     load    = False
-    archive = args.archive
+    archive = args.archive or []
     clean   = args.clean
     dates   = args.dates
-    sources = args.sources
+    sources = args.sources or []
     
-    today   = datetime.strftime(
+    config      = loads(open("./config.json", "r").read())
+    LOG_FMT     = config["log_fmt"]
+    DATE_FMT    = config["date_fmt"]
+
+    today       = datetime.strftime(
                     datetime.today(),
-                    "%Y_%m_%d"
-            )
+                    DATE_FMT
+                )
+
+    start_all = time()
+
+    print(LOG_FMT.format("update", "start", "", ", ".join(sources), 0))
 
     for source in sources:
 
@@ -62,7 +76,7 @@ if __name__ == "__main__":
         elif source == "cboe_latest":
 
             load = True
-            cboe_extract_transform.write_csv(today)
+            cboe_et.write_csv(today)
 
         elif source == "cme_all":
 
@@ -71,7 +85,7 @@ if __name__ == "__main__":
         elif source == "cme_latest":
 
             cme_extract.get_files([None, "all"])
-            cme_transform.write_csv()
+            cme_transform.write_csv(today)
             load = True
 
         elif source == "srf_all":
@@ -98,9 +112,70 @@ if __name__ == "__main__":
 
         load_processed(dates)
 
+    # archive input and/or processed files, if necessary
+
+    if archive:
+
+        print(LOG_FMT.format("update", "start", "", f"archive {', '.join(archive)}", 0))
+
+        start_archive = time()
+
+        archive_path    = config["archive_path"]
+        input_path      = config["input_path"]
+        processed_path  = config["processed_path"]
+
+        input_files     = next(walk(input_path))[2]
+        processed_files = next(walk(processed_path))[2]
+
+        # all files should be prefixed with DATE_FMT
+
+        if not dates:
+
+            dates = [ today ]
+
+        # zip
+
+        for date in dates:
+
+            with ZipFile(f"{archive_path}{date}.zip", "a") as zip:
+
+                    if archive[0] in [ "all", "input" ]:
+                    
+                        for fn in input_files:
+
+                            if date in fn:
+
+                                print(LOG_FMT.format("update", "start", "", fn, 0))
+
+                                start = time()
+                                
+                                zip.write(f"{input_path}{fn}")
+
+                                print(LOG_FMT.format("update", "finish", f"{time() - start: 0.1f}", fn, 0))
+                    
+                    if archive[0] in [ "all", "processed" ]:
+                    
+                        for fn in processed_files:
+                        
+                            if date in fn:
+
+                                print(LOG_FMT.format("update", "start", "", fn, 0))
+                                
+                                start = time()
+
+                                zip.write(f"{processed_path}{fn}")
+
+                                print(LOG_FMT.format("update", "finish", f"{time() - start: 0.1f}", fn, 0))
+
+        print(LOG_FMT.format("update", "finish", f"{time() - start_archive: 0.1f}", f"archive {', '.join(archive)}", 0))
+
     # delete raw input and processed records, if necessary
 
     if clean:
+
+        print(LOG_FMT.format("update", "start", "", f"clean", 0))
+
+        start_clean = time()
 
         with open("./config.json", "r") as fd:
 
@@ -121,6 +196,8 @@ if __name__ == "__main__":
                         
                             remove(f"{path}{fn}")
 
-    if archive:
+                            print(LOG_FMT.format("update", "finish", "", f"clean {fn}", 0))
 
-        pass
+        print(LOG_FMT.format("update", "finish", f"{time() - start_clean: 0.1f}", f"clean", 0))
+
+    print(LOG_FMT.format("update", "finish", f"{time() - start_all: 0.1f}", "", 0))
