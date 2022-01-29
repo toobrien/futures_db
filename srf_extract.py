@@ -1,3 +1,4 @@
+from datetime   import datetime
 from io         import BytesIO
 from json       import loads
 from requests   import get
@@ -8,14 +9,17 @@ from zipfile    import ZipFile
 
 # srf reference: https://data.nasdaq.com/data/SRF-Reference-Futures/usage/export
 
+
 def get_files(cmd: str):
 
     config          = loads(open("./config.json", "r").read())
     LOG_FMT         = config["log_fmt"]
+    DATE_FMT        = config["date_fmt"]
     input_path      = config["input_path"]
     nasdaq_api_key  = config["srf"]["nasdaq_api_key"]
     ohlc_url        = f"{config['srf']['ohlc_url']}?api_key={nasdaq_api_key}"
     metadata_url    = f"{config['srf']['metadata_url']}?api_key={nasdaq_api_key}"
+    today           = datetime.strftime(datetime.today(), DATE_FMT)
 
     # cmd == "all" or "partial"
     # all for whole srf db; partial for today's rows
@@ -29,10 +33,13 @@ def get_files(cmd: str):
 
     start_all = time()
 
-    for url in [ 
-        ohlc_url,
-        metadata_url 
+    for option in [ 
+        ( ohlc_url, "ohlc" ),
+        ( metadata_url, "metadata" )
     ]:
+
+        url  = option[0]
+        kind = option[1]
 
         stem = url.split("?")[0]
 
@@ -47,7 +54,16 @@ def get_files(cmd: str):
 
             bytes.write(chunk)
 
-        ZipFile(bytes).extractall(input_path)
+        with ZipFile(bytes) as zip:
+            
+            for fn in zip.namelist():
+
+                bytes = zip.read(fn)
+                
+                with open(f"{input_path}{today}_srf_{kind}.csv", "wb") as fd:
+
+                    fd.write(bytes)
+
 
         print(LOG_FMT.format("srf_extract", "finish", f"{time() - start: 0.1f}", f"GET {stem}", 200))
 

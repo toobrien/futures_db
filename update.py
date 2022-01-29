@@ -6,6 +6,7 @@ from    datetime        import datetime
 from    json            import loads
 from    load            import load_processed
 from    os              import remove, walk
+from    re              import match
 import  srf_extract
 import  srf_transform
 from    time            import time
@@ -91,13 +92,13 @@ if __name__ == "__main__":
         elif source == "srf_all":
 
             srf_extract.get_files("all")
-            srf_transform.write_csv()
+            srf_transform.write_csv(today)
             load = True
 
         elif source == "srf_latest":
 
             srf_extract.get_files("partial")
-            srf_transform.write_csv()
+            srf_transform.write_csv(today)
             load = True
 
     # insert records into database
@@ -116,8 +117,6 @@ if __name__ == "__main__":
 
     if archive:
 
-        print(LOG_FMT.format("update", "start", "", f"archive {', '.join(archive)}", 0))
-
         start_archive = time()
 
         archive_path    = config["archive_path"]
@@ -127,47 +126,40 @@ if __name__ == "__main__":
         input_files     = next(walk(input_path))[2]
         processed_files = next(walk(processed_path))[2]
 
-        # all files should be prefixed with DATE_FMT
+        archive_cmd = archive[0]
 
-        if not dates:
+        print(LOG_FMT.format("update", "start", "", f"archive {archive_cmd}", 0))
 
-            dates = [ today ]
+        # match DATE_FMT
+
+        DATE_RE = '(\d{4}-\d{2}-\d{2})'
 
         # zip
 
-        for date in dates:
+        for option in [
+            ( [ "all", "input" ], input_files, input_path ),
+            ( [ "all", "processed" ], processed_files, processed_path )
+        ]:
 
-            with ZipFile(f"{archive_path}{date}.zip", "a") as zip:
+            if archive_cmd in option[0]:
+            
+                for fn in option[1]:
 
-                    if archive[0] in [ "all", "input" ]:
-                    
-                        for fn in input_files:
+                    m = match(DATE_RE, fn)
 
-                            if date in fn:
+                    if m:
 
-                                print(LOG_FMT.format("update", "start", "", fn, 0))
+                        print(LOG_FMT.format("update", "start", "", f"archive {fn}", 0))
 
-                                start = time()
-                                
-                                zip.write(f"{input_path}{fn}")
-
-                                print(LOG_FMT.format("update", "finish", f"{time() - start: 0.1f}", fn, 0))
-                    
-                    if archive[0] in [ "all", "processed" ]:
-                    
-                        for fn in processed_files:
+                        start = time()
                         
-                            if date in fn:
+                        with ZipFile(f"{archive_path}{m[0]}.zip", "a") as zip:
+                            
+                            zip.write(f"{option[2]}{fn}")
 
-                                print(LOG_FMT.format("update", "start", "", fn, 0))
-                                
-                                start = time()
+                        print(LOG_FMT.format("update", "finish", f"{time() - start: 0.1f}", f"archive {fn}", 0))
 
-                                zip.write(f"{processed_path}{fn}")
-
-                                print(LOG_FMT.format("update", "finish", f"{time() - start: 0.1f}", fn, 0))
-
-        print(LOG_FMT.format("update", "finish", f"{time() - start_archive: 0.1f}", f"archive {', '.join(archive)}", 0))
+        print(LOG_FMT.format("update", "finish", f"{time() - start_archive: 0.1f}", f"archive {archive_cmd}", 0))
 
     # delete raw input and processed records, if necessary
 
