@@ -27,16 +27,17 @@ Included is a sample `update.sh` which will initialize the database using SRF an
         to_date       TEXT
 ```
 
+### Updating the database
+
+- The CME FTP is updated periodically throughout the day, with final settlement values available after `6:30 PM CT`.
+- SRF is updated nightly (Tues-Sat) at `12:45 AM ET`.
+- update.sh is a sample wrapper for update.py, which allows you to retrieve, clean (remove), and archive daily updates.
+
 ### Extending the database
 
 The CME daily data allows you to record more contracts than exist in SRF. To track a contract not already in `contracts.csv` add a line for the contract. The `globex` symbol is the only strictly necessary field. Note that this file also provides the mapping between SRF and Globex codes. The database itself will use the Globex codes for all symbols.
 
 I have populated `contracts.csv` with all of the contracts from SRF, plus some of those from CME that interest me. Feel free to edit the list as you wish.
-
-### Update schedule
-
-- The CME FTP is updated periodically throughout the day, with final settlement values available after `6:30 PM CT`.
-- SRF is updated nightly (Tues-Sat) at `12:45 AM ET`.
 
 ### Data quirks
 
