@@ -122,7 +122,7 @@
         "srf": "KW",
         "globex": "KE",
         "exchange": "CBOT",
-        "scale": 1.0,
+        "scale": 100.0,
         "enabled": "True"
     },
     "Lean Hog": {
@@ -178,7 +178,7 @@
         "srf": "O",
         "globex": "ZO",
         "exchange": "CBOT",
-        "scale": 1.0,
+        "scale": 100.0,
         "enabled": true
     },
     "Palladium": {
@@ -233,7 +233,7 @@
         "srf": "S",
         "globex": "ZS",
         "exchange": "CBOT",
-        "scale": 1.0,
+        "scale": 100.0,
         "enabled": true
     },
     "Soybean Meal": {
@@ -245,7 +245,7 @@
     },
     "Soybean Oil": {
         "srf": "BO",
-        "glboex": "ZL",
+        "globex": "ZL",
         "exchange": "CBOT",
         "scale": 1.0,
         "enabled": true
@@ -268,7 +268,7 @@
         "srf": "W",
         "globex": "ZW",
         "exchange": "CBOT",
-        "scale": 1.0,
+        "scale": 100.0,
         "enabled": true
     },
     "Brent Crude": {
@@ -519,6 +519,12 @@
         "srf": "DJ",
         "exchange": "CBOT",
         "enabled": false
+    },
+    "Pork Cutout": {
+        "globex": "PRK",
+        "exchange": "CME",
+        "scale": 1.0,
+        "enabled": true
     },
     "CBOE Volatility Index": {
         "cboe": "VX",

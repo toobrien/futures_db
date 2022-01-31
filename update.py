@@ -1,14 +1,14 @@
 from    argparse        import ArgumentParser
-import  cboe_et
-import  cme_extract
-import  cme_transform
+from    extract         import cboe_extract
+from    extract         import cme_extract
+from    transform       import cme_transform
 from    datetime        import datetime
 from    json            import loads
 from    load            import load_processed
 from    os              import remove, walk
 from    re              import match
-import  srf_extract
-import  srf_transform
+from    extract         import srf_extract
+from    transform       import srf_transform
 from    time            import time
 from    zipfile         import ZipFile
 
@@ -70,36 +70,34 @@ if __name__ == "__main__":
 
     for source in sources:
 
+        load = True
+
         if source == "cboe_all":
 
-            load = True
+            cboe_extract.get_files
 
         elif source == "cboe_latest":
 
-            load = True
-            cboe_et.write_csv(today)
+            cboe_extract.get_files(today)
 
         elif source == "cme_all":
 
-            load = True
+            pass
 
         elif source == "cme_latest":
 
-            cme_extract.get_files([None, "all"])
+            cme_extract.get_files([ None, "all" ])
             cme_transform.write_csv(today)
-            load = True
 
         elif source == "srf_all":
 
             srf_extract.get_files("all")
             srf_transform.write_csv(today)
-            load = True
 
         elif source == "srf_latest":
 
             srf_extract.get_files("partial")
             srf_transform.write_csv(today)
-            load = True
 
     # insert records into database
 

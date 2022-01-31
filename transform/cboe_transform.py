@@ -6,37 +6,6 @@ from time       import time
 
 def write_csv(yyyy_mm_dd: str):
 
-    # extract
-
-    config      = loads(open("./config.json", "r").read())
-    LOG_FMT     = config["log_fmt"]
-    out_path    = config["processed_path"]
-
-    results = []
-
-    print(LOG_FMT.format("cboe_et", "start", "", "", 0))
-
-    url = f"https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={yyyy_mm_dd}"
-
-    print(LOG_FMT.format("cboe_et", "start", "", f"GET {url}", 0))
-
-    start_all = time()
-
-    res = get(url)
-
-    if res.status_code != 200:
-
-        print(LOG_FMT.format("cboe_et", "error", f"{time() - start_all: 0.1f}", f"GET {url, res.status_code}", 0))
-        #print(res.text)
-
-        return
-
-    else:
-
-        print(LOG_FMT.format("cboe_et", "finish", f"{time() - start_all: 0.1f}", f"GET {url}", res.status_code))
-
-        results = res.text.splitlines()
-
     # transform
 
     ohlc        = []

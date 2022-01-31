@@ -24,7 +24,6 @@ def write_csv(date: str):
 
     config              = loads(open("./config.json", "r").read())
     LOG_FMT             = config["log_fmt"]
-    DATE_FMT            = config["date_fmt"]
     input_path          = config["input_path"]
     processed_path      = config["processed_path"]
     contract_settings   = loads(open(config["contract_settings"], "r").read())
@@ -141,7 +140,7 @@ def write_csv(date: str):
                 scale = enabled_contracts[symbol]["scale"]
 
                 id          =   f"{exchange}_{symbol}{month}{year}"
-                date        =   row[0]
+                date_        =  row[0]
                 settle      =   str(float(row[13]) * scale) if row[13] != "" else "NULL"
                 open_       =   str(float(row[12]) * scale) if row[12] != "" else "NULL"
                 high        =   str(float(row[17]) * scale) if row[17] != "" else "NULL"
@@ -159,7 +158,7 @@ def write_csv(date: str):
                         symbol,
                         month,
                         year,
-                        date,
+                        date_,
                         open_,
                         high,
                         low,
@@ -188,17 +187,12 @@ def write_csv(date: str):
     # write ohlc and metadata records to file
     # all records are for the same day
 
-    yyyy_mm_dd = datetime.strftime(
-                    datetime.today(),
-                    DATE_FMT
-                )
-
     for record_type, records in [
         ( "ohlc", ohlc ),
         ( "metadata", metadata )
     ]:
 
-        with open(f"{processed_path}{yyyy_mm_dd}_{record_type}.csv", "a") as fd:
+        with open(f"{processed_path}{date}_{record_type}.csv", "a") as fd:
 
             w = writer(fd, delimiter = ",")
             w.writerows(records)
