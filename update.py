@@ -74,11 +74,11 @@ if __name__ == "__main__":
 
         if source == "cboe_all":
 
-            cboe_extract.get_files
+            cboe_extract.get_files("history")
 
         elif source == "cboe_latest":
 
-            cboe_extract.get_files(today)
+            cboe_extract.get_files("latest")
 
         elif source == "cme_all":
 

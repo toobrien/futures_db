@@ -16,7 +16,6 @@ from time       import time
 # VX final settlement:  https://www.cboe.com/us/futures/market_statistics/final_settlement_prices/csv
 # daily VX settlements: https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={yyyy-mm-dd}
 
-
 config = loads(open("./config.json").read())
 
 DATE_FMT    = config["date_fmt"]
@@ -35,7 +34,7 @@ def get_csv(url: str):
     return res
 
 
-def get_history(today: str):
+def get_history(date: str):
 
     input_path = config["input_path"]
 
@@ -59,7 +58,7 @@ def get_history(today: str):
             else:
 
                 fn = input_path + VX_FN_FMT.format(
-                                    date  = today,
+                                    date  = date,
                                     month = month,
                                     year  = year
                                 )
@@ -82,7 +81,7 @@ def get_history(today: str):
 
         return 1
 
-    with open(f"{input_path}{today}_cfe_metadata.csv", "w") as fd:
+    with open(f"{input_path}{date}_cfe_vx_final_settlements.csv", "w") as fd:
 
         fd.write(res.text)
 
@@ -115,7 +114,7 @@ def get_history(today: str):
         month   = record[1][3]
         year    = record[3][:4]
         fn      = input_path + VX_FN_FMT.format(
-                                    date  = today,
+                                    date  = date,
                                     month = month,
                                     year  = year
                                 )
@@ -127,10 +126,20 @@ def get_history(today: str):
     # remaining contracts: those currently listed but not yet expired
     # the "settlements" csv above does not give us expirations for current contracts
     # so for these we go to the daily settlements
-    
+
+    get_latest(date)
+
+    return 0
+
+
+def get_latest(date: str):
+
+    input_path      = config["input_path"]
     url_template    = "https://www.cboe.com/us/futures/market_statistics/historical_data/products/csv/VX/{0}"
 
-    res = get_day(today, False)
+    # metadata
+
+    res = get_current_settlements(date)
 
     if not res:
 
@@ -138,6 +147,14 @@ def get_history(today: str):
         print(LOG_FMT.format("cboe_extract", "error", "", msg, 1))
 
         return 1
+    
+    else:
+
+        with open(f"{input_path}{date}_cfe_latest_settlements.csv", "w") as fd:
+
+            fd.write(res.text)
+
+    # up-to-date data for listed contracts
 
     records = reader(res.text.splitlines())
     next(records)
@@ -155,6 +172,8 @@ def get_history(today: str):
 
         else:
 
+            start = time()
+
             res = get_csv(url_template.format(record[2]))
 
             if res.status_code != 200:
@@ -164,7 +183,7 @@ def get_history(today: str):
             month   = record[1][3]
             year    = record[2][:4]
             fn      = input_path + VX_FN_FMT.format(
-                                        date  = today,
+                                        date  = date,
                                         month = month,
                                         year  = year
                                     )
@@ -175,10 +194,9 @@ def get_history(today: str):
 
     return 0
 
+def get_current_settlements(date: str):
 
-def get_day(day: str, write: bool):
-
-    if not match("\d{4}-\d{2}-\d{2}", day):
+    if not match("\d{4}-\d{2}-\d{2}", date):
 
         msg = "get_day : date format should be 'yyyy-mm-dd'"
         print(LOG_FMT.format("cboe_extract", "error", "", msg, 1))
@@ -187,7 +205,7 @@ def get_day(day: str, write: bool):
 
     start_all = time()
 
-    res = get_csv(f"https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={day}")
+    res = get_csv(f"https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={date}")
 
     if res.status_code != 200:
 
@@ -197,41 +215,43 @@ def get_day(day: str, write: bool):
 
     else:
 
-        if write:
-
-            input_path = config["input_path"]
-
-            with open(f"{input_path}{day}_cfe_vx_latest.csv", "w") as fd:
-
-                fd.write(res.text)
-
-            return 0
-        
-        else:
-
-            return res
+        return res
 
 
 def get_files(cmd: str):
 
+    start_all = time()
+
+    parts = cmd.split()
+    cmd   = parts[0]
+
     today = datetime.today()
     today = datetime.strftime(today, DATE_FMT)
+    date  = today
 
-    start_all = time()
+    # by default today's date is used to get the latest settlements
+    # which are needed for both "history" and "latest"
+
+    # the user can override with a different date if, e.g., the script
+    # is run on a weekend
+
+    if len(parts) == 2:
+
+        date = parts[1]
 
     print(LOG_FMT.format("cboe_extract", "start", "", f"get_files {cmd}", 0))
 
     if cmd == "history":
 
-        err = get_history(today)
+        err = get_history(date)
 
-    elif cmd == "today":
+    elif cmd == "latest":
 
-        err = get_day(today, True)
-
-    elif match("\d{4}-\d{2}-\d{2}", cmd):
-
-        err = get_day(cmd)
+        err = get_latest(date)
+    
+    else:
+        
+        err = 1
 
     print(LOG_FMT.format("cboe_extract", "finish", f"{time() - start_all: 0.1f}", f"get_files {cmd}", err))
 
