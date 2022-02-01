@@ -1,6 +1,7 @@
 from csv            import reader, writer
 from datetime       import datetime
 from json           import loads
+from sys            import argv
 from time           import time
 from typing         import Dict, Tuple
 
@@ -226,9 +227,15 @@ def write_csv(date: str):
 
 if __name__=="__main__":
 
-    today = datetime.strftime(
-            datetime.today(),
-            "%Y-%m-%d"
-        )
+    if len(argv) < 2:
 
-    write_csv(today)
+        today = datetime.strftime(
+                datetime.today(),
+                "%Y-%m-%d"
+            )
+
+        write_csv(today)
+
+    else:
+
+        write_csv(argv[1])

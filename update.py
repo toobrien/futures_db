@@ -1,15 +1,16 @@
 from    argparse        import ArgumentParser
+from    datetime        import datetime
 from    extract         import cboe_extract
 from    extract         import cme_extract
-from    transform       import cme_transform
-from    datetime        import datetime
+from    extract         import srf_extract
 from    json            import loads
 from    load            import load_processed
 from    os              import remove, walk
 from    re              import match
-from    extract         import srf_extract
-from    transform       import srf_transform
 from    time            import time
+from    transform       import cme_transform
+from    transform       import cboe_transform
+from    transform       import srf_transform
 from    zipfile         import ZipFile
 
 
@@ -75,10 +76,12 @@ if __name__ == "__main__":
         if source == "cboe_all":
 
             cboe_extract.get_files("history")
+            cboe_transform.write_csv(today)
 
         elif source == "cboe_latest":
 
             cboe_extract.get_files("latest")
+            cboe_transform.write_csv(today)
 
         elif source == "cme_all":
 

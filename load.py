@@ -2,6 +2,7 @@ from csv        import reader
 from datetime   import datetime
 from json       import loads
 from sqlite3    import connect, Connection, OperationalError
+from sys        import argv
 from time       import time
 from typing     import List
 
@@ -141,9 +142,15 @@ def load_processed(dates):
 
 if __name__ == "__main__":
 
-    today = datetime.strftime(
-                "%Y-%m-%d",
-                datetime.today()
-            )
+    if len(argv) < 2:
 
-    load_processed([ today ])
+        today = datetime.strftime(
+                    "%Y-%m-%d",
+                    datetime.today()
+                )
+
+        load_processed([ today ])
+
+    else:
+
+        load_processed([ argv[1] ])

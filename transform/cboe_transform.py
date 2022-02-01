@@ -3,6 +3,7 @@ from datetime   import datetime
 from json       import loads
 from os         import walk
 from re         import match
+from sys        import argv
 from time       import time
 
 
@@ -33,6 +34,12 @@ def process_vx_ohlc_csv(date: str, fn: str):
 
         rows = [ row.split(",") for row in fd.read().splitlines() ][1:]
         
+        # the file may have a disclaimer at the top; header row still needs a skip
+
+        if not match("(\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})", rows[0][0]):
+
+            rows = rows[1:]
+
         # some files have mm/dd/yyyy, switch to yyyy-mm-dd
 
         for row in rows:
@@ -191,4 +198,10 @@ def write_csv(date: str):
 
 if __name__ == "__main__":
 
-    write_csv(datetime.today().strftime("%Y-%m-%d"))
+    if len(argv) < 2:
+    
+        write_csv(datetime.today().strftime("%Y-%m-%d"))
+    
+    else:
+
+        write_csv(argv[1])
