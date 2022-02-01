@@ -1,6 +1,10 @@
 A futures database backfilled from the Stevens Reference Futures[^1] data set, and updated daily with CME's published settlement files. `update.py` contains options for initializing the database, updating it daily with SRF, CME (or both), and cleaning up the source data. 
 
-Included is a sample `update.sh` which will initialize the database using SRF and the latest CME data. Before initializing the database, add your Nasdaq data link API key to `config.json`. Afterward, edit this file once the SRF subscription is no longer necessary. The `cme_latest` and `cboe_latest` arguments are sufficient to continue daily updates.
+# USAGE
+
+Included are sample scripts, `init.sh` and `update.sh`. Both invoke `update.py` with the parameters that I use. Running `init.sh` will initialize the database with SRF, CBOE, and CME data. Before initializing the database, add your Nasdaq data link API key to `config.json`. Afterward, run `update.sh` to update the database daily, using only CBOE and CME data. This script runs much more quickly.
+
+Although you can use SRF for daily updates, the sample update script does not, since CME offers almost all of the same data. The subscription is no longer needed.
 
 ### SCHEMA
 
