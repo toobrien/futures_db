@@ -79,8 +79,8 @@ def process_vx_ohlc_csv(date: str, fn: str):
                 
                 # increase vol and oi ?
 
-                # row[8]  = float(row[8]) * 10 if row[8] != '' else "NULL"
-                # row[10] = float(row[10]) * 10 if row[10] != '' else "NULL"
+                row[8]  = float(row[8]) * 10 if row[8] != '' else "NULL"
+                row[10] = float(row[10]) * 10 if row[10] != '' else "NULL"
 
         # one file per contract, find start date
         
