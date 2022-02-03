@@ -12,7 +12,8 @@ input_path  = config["input_path"]
 output_path = config["processed_path"]
 LOG_FMT     = config["log_fmt"]
 
-FROM_DATES = {}
+METADATA = {}
+
 
 def process_vx_ohlc_csv(date: str, fn: str):
 
@@ -32,26 +33,59 @@ def process_vx_ohlc_csv(date: str, fn: str):
 
     with open(f"{input_path}{fn}", "r") as fd:
 
-        rows = [ row.split(",") for row in fd.read().splitlines() ][1:]
-        
-        # the file may have a disclaimer at the top; header row still needs a skip
+        rows = [ 
+            row.split(",")
+            for row in fd.read().splitlines() 
+        ][1:]
+
+        # cleaning: remove empty/incomplete rows
+
+        rows = [
+            row for row in rows
+            if len(row) == 11
+        ]
+
+        # cleaning: the file may have a disclaimer on the first line;
+        # header row still needs a skip
 
         if not match("(\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})", rows[0][0]):
 
             rows = rows[1:]
 
-        # some files have mm/dd/yyyy, switch to yyyy-mm-dd
+
+        # cleaning: some files have mm/dd/yyyy, switch to yyyy-mm-dd
 
         for row in rows:
 
             if "/" in row[0]:
 
                 dt = row[0].split("/")
-                row[0] = f"{dt[2]}-{dt[0]}-{dt[1]}"
+                row[0] = f"{dt[2]}-{dt[0].zfill(2)}-{dt[1].zfill(2)}"
+
+        # cleaning: records before 2007-03-26 are 10x size
+
+        for row in rows:
+
+            if row[0] < "2007-03-26":
+
+                # reduce prices 
+
+                row[2] = float(row[2]) / 10 if row[2] != '' else "NULL"
+                row[3] = float(row[3]) / 10 if row[3] != '' else "NULL"
+                row[4] = float(row[4]) / 10 if row[4] != '' else "NULL"
+                row[5] = float(row[5]) / 10 if row[5] != '' else "NULL"
+                row[6] = float(row[6]) / 10 if row[6] != '' else "NULL"
+                row[7] = float(row[7]) / 10 if row[7] != '' else "NULL"
+                
+                # increase vol and oi ?
+
+                # row[8]  = float(row[8]) * 10 if row[8] != '' else "NULL"
+                # row[10] = float(row[10]) * 10 if row[10] != '' else "NULL"
 
         # one file per contract, find start date
         
         first_row = rows[0]
+        last_row  = rows[-1]
         
         exchange    = "CFE"
         name        = "VX"
@@ -61,19 +95,9 @@ def process_vx_ohlc_csv(date: str, fn: str):
         
         # first trade date
 
-        FROM_DATES[id] = first_row[0]
-
-        skip = 0
+        METADATA[id] = [ first_row[0], last_row[0] ]
 
         for row in rows:
-
-            if len(row) < 10:
-
-                # some records are empty-ish
-
-                skip += 1
-
-                continue
 
             date_           = row[0]
             open_           = row[2]
@@ -111,6 +135,11 @@ def process_vx_metadata_csv(date: str, fn: str):
     # the final settlements file has the expiration date for all expired contracts, but not listed contracts
     # the latest settlements file has the expiration date for active, listed contracts
 
+    # for expired contracts, this method is mostly redundant. their "to" and "from" dates 
+    # should already be set in the METADAT dictionary. however, for active contracts, the
+    # METADATA's "to" date will be the last trade date. this method replaces those trade
+    # dates with the true expiration date.
+
     metadata = []
 
     with open(f"{input_path}{fn}", "r") as fd:
@@ -142,20 +171,20 @@ def process_vx_metadata_csv(date: str, fn: str):
 
                 contract_id = f"CFE_VX{month}{year}"
 
-                from_date = FROM_DATES[contract_id] if contract_id in FROM_DATES else "NULL"
-                to_date   = row[2]
+                if contract_id not in METADATA:
 
-                metadata.append(
-                    [
-                        contract_id,
-                        from_date,
-                        to_date
-                    ]
-                )
-    
+                    METADATA[contract_id] = [ "NULL", row[2] ]
+                
+                else:
+
+                    METADATA[contract_id][1] = row[2]
+
     with open(f"{output_path}{date}_metadata.csv", "a") as fd:
 
-        writer(fd).writerows(metadata)
+        writer(fd).writerows([
+            [ contract_id, dates[0], dates[1] ]
+            for contract_id, dates in METADATA.items()
+        ])
 
 
 def write_csv(date: str):
