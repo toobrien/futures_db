@@ -43,7 +43,7 @@ The CME daily data allows you to record more contracts than exist in SRF. To tra
 
 I have populated `contracts.csv` with all of the contracts from SRF, plus some of those from CME that interest me. Feel free to edit the list as you wish.
 
-### Data quirks
+### Notes and known issues
 
 - SRF contains data from ICE exchanges. I have disabled some of these contracts, but in some cases have kept the data enabled using Globex equivalents. For example, `ATW` (ICE) can be tracked with `MTF` (NYMEX), as these products share the same index, though they trade on different exchanges. Similarly, NYBOT softs are tracked by the CME group, though they don't trade. In these cases, the SRF ICE data will populate the database, and daily updates will be ingested using the cme group data. In these cases, settlement values are probably the only valuable data, as these are likely to be the same between both data sets. If you would prefer, you can disable these contracts entirely using the `enabled` column in `contracts.csv`, or set the Globex code to `""` to retain the initial ICE data from SRF without any future updates from the CME group data.
 
@@ -53,9 +53,10 @@ I have populated `contracts.csv` with all of the contracts from SRF, plus some o
 
 - The CME periodically emends errors in its data, posting these to https://www.cmegroup.com/market-data/files/final-settlement-changes.xls. These changes are not yet incorporated into the database.
 
+- VX split 10:1 around 2007-03-26. I have adjusted the prices, volume, and open interest. A few of the volume and open interest values for March 2007 do not seem accurate, however.
+
 ### Future plans
 
-- Historical VX quotes from CFE
 - A new table for fundamental data
 - A new table for spot prices from local markets
 
