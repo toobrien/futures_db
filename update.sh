@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python update.py $@ cme_latest cboe_latest --clean
+python update.py $@ --sources cme_latest cboe_latest --clean

@@ -59,7 +59,7 @@
         "srf": "C",
         "globex": "ZC",
         "exchange": "CBOT",
-        "scale": 1.0,
+        "scale": 100.0,
         "enabled": true
     },
     "Crude Oil": {
