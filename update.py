@@ -2,6 +2,7 @@ from    argparse        import ArgumentParser
 from    datetime        import datetime
 from    extract         import cboe_extract
 from    extract         import cme_extract
+from    extract         import eia_extract
 from    extract         import srf_extract
 from    json            import loads
 from    load            import load_processed
@@ -10,6 +11,7 @@ from    re              import match
 from    time            import time
 from    transform       import cme_transform
 from    transform       import cboe_transform
+from    transform       import eia_transform
 from    transform       import srf_transform
 from    zipfile         import ZipFile
 
@@ -26,6 +28,8 @@ if __name__ == "__main__":
             "cboe_latest",
             "cme_all",
             "cme_latest",
+            "eia_all",
+            "eia_latest",
             "srf_all",
             "srf_latest"
         ]
@@ -101,6 +105,16 @@ if __name__ == "__main__":
 
             srf_extract.get_files("partial")
             srf_transform.write_csv(today)
+
+        elif source == "eia_all":
+
+            eia_extract.get_files("all")
+            eia_transform.write_csv(today)
+        
+        elif source == "eia_latest":
+
+            eia_extract.get_files("latest")
+            eia_transform.write_csv(today)
 
     # insert records into database
 

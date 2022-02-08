@@ -134,6 +134,33 @@ def load_processed(dates):
         LOG_FMT
     )
 
+    # spot 
+
+    table_statement = '''
+        CREATE TABLE IF NOT EXISTS spot (
+            symbol      TEXT,
+            date        TEXT,
+            price       REAL,
+            PRIMARY KEY(symbol, date)
+        );
+    '''
+
+    record_statement = f'''
+        INSERT INTO spot (symbol, date, price)
+        VALUES (?, ?, ?)
+        ;
+    '''
+
+    update_table(
+        cur,
+        dates,
+        processed_path,
+        "spot",
+        table_statement,
+        record_statement,
+        LOG_FMT
+    )
+
     con.commit()
     con.close()
 
@@ -145,8 +172,8 @@ if __name__ == "__main__":
     if len(argv) < 2:
 
         today = datetime.strftime(
+                    datetime.today(),
                     "%Y-%m-%d",
-                    datetime.today()
                 )
 
         load_processed([ today ])
