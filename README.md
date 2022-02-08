@@ -1,4 +1,6 @@
-A futures database backfilled from the Stevens Reference Futures[^1] data set, and updated daily with CME's published settlement files. `update.py` contains options for initializing the database, updating it daily with SRF, CME (or both), and cleaning up the source data. 
+A futures database backfilled from the Stevens Reference Futures[^1] data set, and updated daily with CME's published settlement files. `update.py` contains options for initializing the database, updating it daily, and cleaning up the source data.
+
+Additionaly, VX settlements are provided from CBOE, and spot prices are available for select contracts.
 
 # USAGE
 
@@ -10,26 +12,32 @@ Although you can use SRF for daily updates, the sample update script does not, s
 
 ```
     ohlc
-        contract_id                       TEXT
-        exchange                          TEXT
-        name                              TEXT
-        month                             TEXT
-        year                              TEXT
-        date                              TEXT
-        open                              REAL
-        high                              REAL
-        low                               REAL
-        settle                            REAL
-        previous day's volume             INTEGER
-        previous day's open interest      INTEGER
-        PRIMARY KEY(contract_id, date)
-
+        contract_id                     TEXT
+        exchange                        TEXT
+        name                            TEXT
+        month                           TEXT
+        year                            TEXT
+        date                            TEXT
+        open                            REAL
+        high                            REAL
+        low                             REAL
+        settle                          REAL
+        previous day's volume           INTEGER
+        previous day's open interest    INTEGER
+        PRIMARY KEY(contract_id, date)  
 
     metadata
-        contract_id   TEXT PRIMARY KEY
-        from_date     TEXT
-        to_date       TEXT
+        contract_id TEXT PRIMARY KEY
+        from_date   TEXT
+        to_date     TEXT
+
+    spot
+        symbol  TEXT
+        date    TEXT
+        price   REAL
 ```
+
+Note: "symbol" from the spot table can be joined on "name" from ohlc records.
 
 ### Updating the database
 
@@ -58,6 +66,6 @@ I have populated `contracts.csv` with all of the contracts from SRF, plus some o
 ### Future plans
 
 - A new table for fundamental data
-- A new table for spot prices from local markets
+- Additional spot prices for grains, livestock, softs, and metals
 
 [^1]: https://data.nasdaq.com/data/SRF-reference-futures

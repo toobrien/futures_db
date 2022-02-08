@@ -9,12 +9,12 @@
         ]
     },
     "srf": {
-        "nasdaq_api_key":   "YOUR_API_KEY_HERE",
+        "nasdaq_api_key":   "3hJyoAvnfbBWgang2kyG",
         "ohlc_url":         "https://data.nasdaq.com/api/v3/databases/SRF/data",
         "metadata_url":     "https://data.nasdaq.com/api/v3/databases/SRF/metadata"
     },
     "eia": {
-        "api_key":  "YOUR_API_KEY_HERE",
+        "api_key":  "IBEUcW5zxZxnQMXsciAqiSUXDae0kYq5mmfqABDL",
         "url":      "http://api.eia.gov/series/?api_key={0}&series_id={1}",
         "spot": {
             "CL":   "PET.RWTC.D",
@@ -26,7 +26,7 @@
         }
     },
     "usda_mars": {
-        "api_key":  "YOUR_API_KEY_HERE",
+        "api_key":  "/CY5wVCkVhfDAvp/D/00572HOleyfrex",
         "url":      "https://marsapi.ams.usda.gov/services/v1.2/reports/{0}"
     },
     "contract_settings":    "./contract_settings.json",
