@@ -146,7 +146,7 @@ def load_processed(dates):
     '''
 
     record_statement = f'''
-        INSERT INTO spot (symbol, date, price)
+        INSERT OR REPLACE INTO spot (symbol, date, price)
         VALUES (?, ?, ?)
         ;
     '''
