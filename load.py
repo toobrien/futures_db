@@ -1,3 +1,4 @@
+from cme_opts   import load_opts
 from csv        import reader
 from datetime   import datetime
 from json       import loads
@@ -160,6 +161,12 @@ def load_processed(dates):
         record_statement,
         LOG_FMT
     )
+
+    # load options for CME contracts
+    
+    for date in dates:
+
+        load_opts(date, con)
 
     con.commit()
     con.close()

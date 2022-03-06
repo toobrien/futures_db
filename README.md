@@ -35,6 +35,26 @@ Although you can use SRF for daily updates, the sample update script does not, s
         symbol  TEXT
         date    TEXT
         price   REAL
+
+    cme_opts
+        date                TEXT,
+        name                TEXT,
+        strike              REAL,
+        expiry              TEXT, 
+        call                INTEGER,
+        last_traded         TEXT,
+        settle              REAL,
+        settle_delta        REAL,
+        high_limit          REAL,
+        low_limit           REAL,
+        high_bid            REAL,
+        low_bid             REAL,
+        previous_volume     INTEGER,
+        previous_interest   INTEGER,
+        underlying_symbol   TEXT,
+        underlying_exchange TEXT,
+        underlying_id       TEXT,
+        PRIMARY KEY(date, name, strike, expiry, call)
 ```
 
 Note: "symbol" from the spot table can be joined on "name" from ohlc records.
