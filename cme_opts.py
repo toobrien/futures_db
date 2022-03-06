@@ -7,7 +7,7 @@ CONFIG              = loads(open("./config.json").read())
 CONTRACT_SETTINGS   = loads(open(CONFIG["contract_settings"]).read())
 ENABLED             = {
     definition["opts"]: {
-        "globex": definition["globex"], 
+        "globex":   definition["globex"], 
         "exchange": definition["exchange"]
     }
     for _, definition in CONTRACT_SETTINGS.items()
@@ -102,7 +102,7 @@ def load_opts(date: str, cur: Connection):
                     previous_interest   = row[22]
                     underlying_month    = MONTHS[int(row[27][-2:])]
                     underlying_year     = row[27][0:4]
-                    underlying_id       = f"{ul_exchange}_{ul_symbol}{underlying_month}{underlying_year[-2:]}"
+                    underlying_id       = f"{ul_exchange}_{ul_symbol}{underlying_month}{underlying_year}"
 
                     processed.append(
                         [

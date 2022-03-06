@@ -15,7 +15,7 @@ def update_table(
     table_name:         str,
     table_statement:    str,
     record_statement:   str,
-    LOG_FMT
+    LOG_FMT:            str
 ):
     cur.execute(table_statement)
 
