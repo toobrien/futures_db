@@ -133,7 +133,7 @@
     "KC HRW Wheat": {
         "srf": "KW",
         "globex": "KE",
-        "opts": "KE",
+        "opts": "KW",
         "exchange": "CBOT",
         "scale": 100.0,
         "enabled": "True"
@@ -281,7 +281,6 @@
     "Swiss Franc": {
         "srf": "SF",
         "globex": "6S",
-        "opts": "06",
         "exchange": "CME",
         "scale": 1.0,
         "enabled": true
@@ -487,7 +486,7 @@
     },
     "Cash-Settled Cheese": {
         "globex": "CSC",
-        "opts": "06",
+        "opts": "CSC",
         "exchange": "CME",
         "scale": 1.0,
         "enabled": true
