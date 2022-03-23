@@ -60,7 +60,7 @@ def get_files(cmd: str):
 
                 bytes = zip.read(fn)
                 
-                with open(f"{input_path}{today}_srf_{kind}.csv", "wb", encoding = "utf-8") as fd:
+                with open(f"{input_path}{today}_srf_{kind}.csv", "wb") as fd:
 
                     fd.write(bytes)
 

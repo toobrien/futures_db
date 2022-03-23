@@ -122,7 +122,7 @@ def process_metadata(
     # 4 from_date       2017-08-15
     # 5 to_date         2018-01-12
 
-    with open(input_path, "r") as fd:
+    with open(input_path, "r", encoding = "utf-8") as fd:
 
         data                = reader(fd)
         processed_records   = [
