@@ -34,7 +34,7 @@ def get_files(cmd):
 
             print(LOG_FMT.format("eia_extract", "finish", f"{time() - start: 0.1f}", url_, res.status_code))
 
-            with open(f"{input_path}{today}_eia_{code}.json", "w") as fd:
+            with open(f"{input_path}{today}_eia_{code}.json", "w", encoding = "utf-8") as fd:
 
                 fd.write(res.text)
         

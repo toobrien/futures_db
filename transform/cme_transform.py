@@ -72,7 +72,7 @@ def write_csv(date: str):
 
     for fn in config["cme"]["cme_files"]:
 
-        with open(f"{input_path}{date}_{fn}", "r") as fd:
+        with open(f"{input_path}{date}_{fn}", "r", encoding = "utf-8") as fd:
 
             # unprocessed cme record
 

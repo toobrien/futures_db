@@ -31,7 +31,7 @@ def process_vx_ohlc_csv(date: str, fn: str):
 
     ohlc = []
 
-    with open(f"{input_path}{fn}", "r") as fd:
+    with open(f"{input_path}{fn}", "r", encoding = "utf-8") as fd:
 
         rows = [ 
             row.split(",")
@@ -142,7 +142,7 @@ def process_vx_metadata_csv(date: str, fn: str):
 
     metadata = []
 
-    with open(f"{input_path}{fn}", "r") as fd:
+    with open(f"{input_path}{fn}", "r", encoding = "utf-8") as fd:
 
         rows = [ row.split(",") for row in fd.read().splitlines() ][1:]
 

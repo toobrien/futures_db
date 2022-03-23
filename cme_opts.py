@@ -36,95 +36,101 @@ def load_opts(date: str, cur: Connection):
 
     start = time()
 
-    print(LOG_FMT.format("load", "start", "", f"load_opts", 0))
+    print(LOG_FMT.format("load_opts", "start", "", f"load_opts", 0))
 
     processed = []
 
     for fn in FILES:
+
+        try:
     
-        with open(f"{INPUT_PATH}{date}_{fn}") as fd:
+            with open(f"{INPUT_PATH}{date}_{fn}", encoding = "utf-8") as fd:
 
-            rows = reader(fd)
+                rows = reader(fd)
 
-            for row in rows:
+                for row in rows:
 
-                ul_symbol   = row[25]
-                type        = row[4]
+                    ul_symbol   = row[25]
+                    type        = row[4]
 
-                if ul_symbol in ENABLED and type == "OOF":
+                    if ul_symbol in ENABLED and type == "OOF":
 
-                    ul_exchange         = ENABLED[ul_symbol]["exchange"]
-                    ul_symbol           = ENABLED[ul_symbol]["globex"]
+                        ul_exchange         = ENABLED[ul_symbol]["exchange"]
+                        ul_symbol           = ENABLED[ul_symbol]["globex"]
 
-                    # 0     BizDt         
-                    # 1     Sym           globex
-                    # 2     ID            clearing
-                    # 3     StrkPx       
-                    # 4     SecTyp        OOF or FUT
-                    # 5     MMYY          YYYYMM       
-                    # 6     MatDt         
-                    # 7     PutCall       1 = call 0 = put
-                    # 8     Exch          
-                    # 9     Desc          ""
-                    # 10    LastTrdDt     
-                    # 11    BidPrice      ""
-                    # 12    OpeningPrice  ""
-                    # 13    SettlePrice  
-                    # 14    SettleDelta
-                    # 15    HighLimit     
-                    # 16    LowLimit     
-                    # 17    DHighPrice    ""
-                    # 18    DLowPrice     ""
-                    # 19    HighBid
-                    # 20    LowBid
-                    # 21    PrevDayVol    
-                    # 22    PrevDayOI     
-                    # 23    FixingPrice   ""
-                    # 24    UndlyExch
-                    # 25    UndlyID       globex
-                    # 26    UndlySecTyp   FUT or ?
-                    # 27    UndlyMMY      YYYYMM
-                    # 28    BankBusDay    ?
+                        # 0     BizDt         
+                        # 1     Sym           globex
+                        # 2     ID            clearing
+                        # 3     StrkPx       
+                        # 4     SecTyp        OOF or FUT
+                        # 5     MMYY          YYYYMM       
+                        # 6     MatDt         
+                        # 7     PutCall       1 = call 0 = put
+                        # 8     Exch          
+                        # 9     Desc          ""
+                        # 10    LastTrdDt     
+                        # 11    BidPrice      ""
+                        # 12    OpeningPrice  ""
+                        # 13    SettlePrice  
+                        # 14    SettleDelta
+                        # 15    HighLimit     
+                        # 16    LowLimit     
+                        # 17    DHighPrice    ""
+                        # 18    DLowPrice     ""
+                        # 19    HighBid
+                        # 20    LowBid
+                        # 21    PrevDayVol    
+                        # 22    PrevDayOI     
+                        # 23    FixingPrice   ""
+                        # 24    UndlyExch
+                        # 25    UndlyID       globex
+                        # 26    UndlySecTyp   FUT or ?
+                        # 27    UndlyMMY      YYYYMM
+                        # 28    BankBusDay    ?
 
-                    date_               = row[0]
-                    name                = row[1]
-                    strike              = row[3]
-                    expiry              = row[6]
-                    call                = row[7]
-                    last_traded         = row[10]
-                    settle              = row[13]
-                    settle_delta        = row[14]
-                    high_limit          = row[15]
-                    low_limit           = row[16]
-                    high_bid            = row[19]
-                    low_bid             = row[20]
-                    previous_volume     = row[21]
-                    previous_interest   = row[22]
-                    underlying_month    = MONTHS[int(row[27][-2:])]
-                    underlying_year     = row[27][0:4]
-                    underlying_id       = f"{ul_exchange}_{ul_symbol}{underlying_month}{underlying_year}"
+                        date_               = row[0]
+                        name                = row[1]
+                        strike              = row[3]
+                        expiry              = row[6]
+                        call                = row[7]
+                        last_traded         = row[10]
+                        settle              = row[13]
+                        settle_delta        = row[14]
+                        high_limit          = row[15]
+                        low_limit           = row[16]
+                        high_bid            = row[19]
+                        low_bid             = row[20]
+                        previous_volume     = row[21]
+                        previous_interest   = row[22]
+                        underlying_month    = MONTHS[int(row[27][-2:])]
+                        underlying_year     = row[27][0:4]
+                        underlying_id       = f"{ul_exchange}_{ul_symbol}{underlying_month}{underlying_year}"
 
-                    processed.append(
-                        [
-                            date_,
-                            name,
-                            strike,
-                            expiry,
-                            call,
-                            last_traded,
-                            settle,
-                            settle_delta,
-                            high_limit,
-                            low_limit,
-                            high_bid,
-                            low_bid,
-                            previous_volume,
-                            previous_interest,
-                            ul_symbol,
-                            ul_exchange,
-                            underlying_id
-                        ]
-                    )
+                        processed.append(
+                            [
+                                date_,
+                                name,
+                                strike,
+                                expiry,
+                                call,
+                                last_traded,
+                                settle,
+                                settle_delta,
+                                high_limit,
+                                low_limit,
+                                high_bid,
+                                low_bid,
+                                previous_volume,
+                                previous_interest,
+                                ul_symbol,
+                                ul_exchange,
+                                underlying_id
+                            ]
+                        )
+
+        except FileNotFoundError:
+
+            print(LOG_FMT.format("load_opts", "error", f"{time() - start: 0.1f}", f"skipping file {fn}", 1))
         
     table_statement = '''
         CREATE TABLE IF NOT EXISTS cme_opts (
@@ -155,29 +161,31 @@ def load_opts(date: str, cur: Connection):
     
     except OperationalError as e:
 
-        print(f"ERROR\tload_opts\t\t{e}")
+        print(LOG_FMT.format("load_opts", "error", f"{time() - start: 0.1f}", e, 1))
 
-    record_statement = f'''
-        INSERT OR REPLACE INTO cme_opts (
-            date, name, strike, expiry, call, last_traded,
-            settle, settle_delta, high_limit, low_limit, 
-            high_bid, low_bid, previous_volume, previous_interest,
-            underlying_symbol, underlying_exchange, underlying_id
-        )
-        VALUES (
-            ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?,
-            ?, ?
-        );
-    '''
+    if processed:
 
-    try:
+        record_statement = f'''
+            INSERT OR REPLACE INTO cme_opts (
+                date, name, strike, expiry, call, last_traded,
+                settle, settle_delta, high_limit, low_limit, 
+                high_bid, low_bid, previous_volume, previous_interest,
+                underlying_symbol, underlying_exchange, underlying_id
+            )
+            VALUES (
+                ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, 
+                ?, ?, ?, ?, ?,
+                ?, ?
+            );
+        '''
 
-        cur.executemany(record_statement, processed)
+        try:
 
-    except OperationalError as e:
+            cur.executemany(record_statement, processed)
 
-        print(f"ERROR\tload_opts\t\t{e}")
+        except OperationalError as e:
 
-    print(LOG_FMT.format("load", "finish", f"{time() - start: 0.1f}", f"load_opts", 0))
+            print(LOG_FMT.format("load_opts", "error", f"{time() - start: 0.1f}", e, 1))
+
+    print(LOG_FMT.format("load_opts", "finish", f"{time() - start: 0.1f}", f"load_opts", 0))

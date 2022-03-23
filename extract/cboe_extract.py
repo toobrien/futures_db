@@ -81,7 +81,7 @@ def get_history(date: str):
 
         return 1
 
-    with open(f"{input_path}{date}_cfe_vx_final_settlements.csv", "w") as fd:
+    with open(f"{input_path}{date}_cfe_vx_final_settlements.csv", "w", encoding = "utf-8") as fd:
 
         fd.write(res.text)
 
@@ -119,7 +119,7 @@ def get_history(date: str):
                                     year  = year
                                 )
         
-        with open(fn, "w") as fd:
+        with open(fn, "w", encoding = "utf-8") as fd:
             
             fd.write(res.text)
 
@@ -150,7 +150,7 @@ def get_latest(date: str):
     
     else:
 
-        with open(f"{input_path}{date}_cfe_latest_settlements.csv", "w") as fd:
+        with open(f"{input_path}{date}_cfe_latest_settlements.csv", "w", encoding = "utf-8") as fd:
 
             fd.write(res.text)
 
@@ -188,7 +188,7 @@ def get_latest(date: str):
                                         year  = year
                                     )
             
-            with open(fn, "w") as fd:
+            with open(fn, "w", encoding = "utf-8") as fd:
                 
                 fd.write(res.text)
 

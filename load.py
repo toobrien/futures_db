@@ -25,17 +25,23 @@ def update_table(
 
     for date in dates:
         
-        with open(f"{processed_path}{date}_{table_name}.csv", "r") as fd:
+        try:
         
-            records = reader(fd)
+            with open(f"{processed_path}{date}_{table_name}.csv", "r") as fd:
+            
+                records = reader(fd)
 
-            try:
+                try:
 
-                cur.executemany(record_statement, records)
+                    cur.executemany(record_statement, records)
 
-            except OperationalError as e:
+                except OperationalError as e:
 
-                print(f"ERROR\t{table_name}\t\t{e}")
+                    print(f"ERROR\t{table_name}\t\t{e}")
+        
+        except FileNotFoundError as e:
+
+            print(LOG_FMT.format("load", "error", f"{time() - start: 0.1f}", f"skipping file for {table_name}", 1))
 
     print(LOG_FMT.format("load", "finish", f"{time() - start: 0.1f}", f"update_table {table_name}", 0))
 

@@ -61,7 +61,7 @@ def process_ohlc(
         ]
     ]
 
-    with open(input_path, "r") as fd:
+    with open(input_path, "r", encoding = "utf-8") as fd:
 
         data = reader(fd)
 
