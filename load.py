@@ -27,7 +27,7 @@ def update_table(
         
         try:
         
-            with open(f"{processed_path}{date}_{table_name}.csv", "r") as fd:
+            with open(f"{processed_path}{date}_{table_name}.csv", "r", encoding = "utf-8") as fd:
             
                 records = reader(fd)
 

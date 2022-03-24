@@ -37,7 +37,7 @@ def write_csv(date: str):
                 processed.append([ symbol, date_, price ])
 
 
-            with open(f"{output_path}{date}_spot.csv", "a") as fd:
+            with open(f"{output_path}{date}_spot.csv", "a", newline = "") as fd:
 
                 w = writer(fd)
                 w.writerows(processed)

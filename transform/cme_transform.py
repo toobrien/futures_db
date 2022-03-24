@@ -193,7 +193,7 @@ def write_csv(date: str):
         ( "metadata", metadata )
     ]:
 
-        with open(f"{processed_path}{date}_{record_type}.csv", "a") as fd:
+        with open(f"{processed_path}{date}_{record_type}.csv", "a", newline = "") as fd:
 
             w = writer(fd, delimiter = ",")
             w.writerows(records)

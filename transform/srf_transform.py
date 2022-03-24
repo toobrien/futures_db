@@ -101,7 +101,7 @@ def process_ohlc(
 
                 records.append(processed)
 
-    with open(output_path, "a") as fd:
+    with open(output_path, "a", newline = "") as fd:
 
         w = writer(fd)
         w.writerows(records)
@@ -149,7 +149,7 @@ def process_metadata(
 
                 processed_records.append(processed)
 
-        with open(output_path, "a") as fd:
+        with open(output_path, "a", newline = "") as fd:
 
             w = writer(fd)
             w.writerows(processed_records)

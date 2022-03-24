@@ -124,7 +124,7 @@ def process_vx_ohlc_csv(date: str, fn: str):
                 ]
             )
     
-    with open(f"{output_path}{date}_ohlc.csv", "a") as fd:
+    with open(f"{output_path}{date}_ohlc.csv", "a", newline = "") as fd:
 
         writer(fd).writerows(ohlc)
 
@@ -179,7 +179,7 @@ def process_vx_metadata_csv(date: str, fn: str):
 
                     METADATA[contract_id][1] = row[2]
 
-    with open(f"{output_path}{date}_metadata.csv", "a") as fd:
+    with open(f"{output_path}{date}_metadata.csv", "a", newline = "") as fd:
 
         writer(fd).writerows([
             [ contract_id, dates[0], dates[1] ]
