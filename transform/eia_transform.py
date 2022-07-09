@@ -1,6 +1,6 @@
 from csv        import writer
 from datetime   import datetime
-from json       import loads
+from json       import JSONDecodeError, loads
 from sys        import argv
 from time       import time
 
@@ -16,26 +16,38 @@ def write_csv(date: str):
 
     for symbol, code in spot.items():
 
-        with open(f"{input_path}{date}_eia_{code}.json") as fd:
+        fn = f"{input_path}{date}_eia_{code}.json"
 
-            start = time()
+        with open(fn) as fd:
 
-            res     = loads(fd.read())
-            rows    = res["series"][0]["data"]
+            start       = time()
+            process     = True
+            rows        = []
+            processed   = []
+
+            try:
+                
+                res = loads(fd.read())
+                rows = res["series"][0]["data"]
+
+            except JSONDecodeError as e:
+
+                print(LOG_FMT.format("eia_transform", "error", f"json decode error: {fn}", code, 1))
+
+                process = False
 
             # 0     date    20220201
             # 1     price   5.45
 
-            processed = []
+            if process:
 
-            for row in rows:
+                for row in rows:
 
-                date_ = row[0]
-                date_ = f"{date_[0:4]}-{date_[4:6]}-{date_[6:8]}"
-                price = float(row[1]) if row[1] else "NULL"
-            
-                processed.append([ symbol, date_, price ])
-
+                    date_ = row[0]
+                    date_ = f"{date_[0:4]}-{date_[4:6]}-{date_[6:8]}"
+                    price = float(row[1]) if row[1] else "NULL"
+                
+                    processed.append([ symbol, date_, price ])
 
             with open(f"{output_path}{date}_spot.csv", "a", newline = "") as fd:
 
