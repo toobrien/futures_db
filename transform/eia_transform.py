@@ -28,7 +28,7 @@ def write_csv(date: str):
             try:
                 
                 res = loads(fd.read())
-                rows = res["series"][0]["data"]
+                rows = res["response"]["data"]
 
             except JSONDecodeError as e:
 
@@ -43,9 +43,8 @@ def write_csv(date: str):
 
                 for row in rows:
 
-                    date_ = row[0]
-                    date_ = f"{date_[0:4]}-{date_[4:6]}-{date_[6:8]}"
-                    price = float(row[1]) if row[1] else "NULL"
+                    date_   = row["period"]
+                    price   = float(row["value"]) if row["value"] else "NULL"
                 
                     processed.append([ symbol, date_, price ])
 

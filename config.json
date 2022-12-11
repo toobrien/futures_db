@@ -15,7 +15,7 @@
     },
     "eia": {
         "api_key":  "<YOUR API KEY HERE>",
-        "url":      "https://api.eia.gov/series/?api_key={0}&series_id={1}",
+        "url":      "https://api.eia.gov/v2/seriesid/{1}?api_key={0}",
         "spot": {
             "CL":   "PET.RWTC.D",
             "BZ":   "PET.RBRTE.D",
@@ -26,7 +26,7 @@
         }
     },
     "usda_mars": {
-        "api_key":  "<YOUR API KEY HERE>",
+        "api_key":  "<YOUR API_KEY_HERE>", 
         "url":      "https://marsapi.ams.usda.gov/services/v1.2/reports/{0}"
     },
     "contract_settings":    "./contract_settings.json",
