@@ -14,7 +14,7 @@
         "metadata_url":     "https://data.nasdaq.com/api/v3/databases/SRF/metadata"
     },
     "eia": {
-        "api_key":  "<YOUR API KEY HERE>",
+        "api_key":  "IBEUcW5zxZxnQMXsciAqiSUXDae0kYq5mmfqABDL",
         "url":      "https://api.eia.gov/v2/seriesid/{1}?api_key={0}",
         "spot": {
             "CL":   "PET.RWTC.D",
@@ -26,7 +26,7 @@
         }
     },
     "usda_mars": {
-        "api_key":  "<YOUR API_KEY_HERE>", 
+        "api_key":  "/CY5wVCkVhfDAvp/D/00572HOleyfrex", 
         "url":      "https://marsapi.ams.usda.gov/services/v1.2/reports/{0}"
     },
     "contract_settings":    "./contract_settings.json",

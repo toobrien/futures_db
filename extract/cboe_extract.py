@@ -71,7 +71,7 @@ def get_history(date: str):
     
     # settlement csv (metadata)
 
-    settlement_url  = "https://www.cboe.com/us/futures/market_statistics/final_settlement_prices/csv" 
+    settlement_url = "https://www.cboe.com/us/futures/market_statistics/final_settlement_prices/csv" 
 
     res = get_csv(settlement_url)
 
@@ -87,7 +87,7 @@ def get_history(date: str):
 
     # "historical" csv (same format as "archive")
 
-    url_template    = "https://www.cboe.com/us/futures/market_statistics/historical_data/products/csv/VX/{0}"
+    url_template = "https://cdn.cboe.com/data/us/futures/market_statistics/historical_data/VX/VX_{0}.csv"
 
     settlements = reader(res.text.splitlines())
 
@@ -135,7 +135,7 @@ def get_history(date: str):
 def get_latest(date: str):
 
     input_path      = config["input_path"]
-    url_template    = "https://www.cboe.com/us/futures/market_statistics/historical_data/products/csv/VX/{0}"
+    url_template    = "https://cdn.cboe.com/data/us/futures/market_statistics/historical_data/VX/VX_{0}.csv"
 
     # metadata
 
