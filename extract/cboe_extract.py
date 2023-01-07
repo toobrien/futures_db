@@ -11,7 +11,7 @@ from time       import time
 # VIX 1990-2003:        https://cdn.cboe.com/resources/us/indices/vixarchive.xls
 # VIX 2004 onward:      https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv
 # VVIX 2006 onward:     https://cdn.cboe.com/api/global/us_indices/daily_prices/VVIX_History.csv
-# VX 2013 onward:       https://www.cboe.com/us/futures/market_statistics/historical_data/products/csv/VX/{yyyy-mm-dd}
+# VX 2013 onward:       https://cdn.cboe.com/data/us/futures/market_statistics/historical_data/VX/VX_{yyyy-mm-dd}.csv
 # VX K04 - Z13:         https://cdn.cboe.com/resources/futures/archive/volume-and-price/CFE_{M}{YY}_VX.csv
 # VX final settlement:  https://www.cboe.com/us/futures/market_statistics/final_settlement_prices/csv
 # daily VX settlements: https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={yyyy-mm-dd}
