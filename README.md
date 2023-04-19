@@ -22,8 +22,8 @@ Although you can use SRF for daily updates, the sample update script does not, s
         high                            REAL
         low                             REAL
         settle                          REAL
-        previous day's volume           INTEGER
-        previous day's open interest    INTEGER
+        volume                          INTEGER
+        open_interest                   INTEGER
         PRIMARY KEY(contract_id, date)  
 
     metadata
