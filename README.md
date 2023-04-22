@@ -3,6 +3,10 @@
 Development on this repository is no longer active! If you have been using it, you may want to follow the instructions to convert your database to the smaller, faster, and simpler version at [`futures_db_v2`](https://www.github.com/toobrien/futures_db_v2).
 
 
+----------
+
+
+
 A futures database backfilled from the Stevens Reference Futures[^1] data set, and updated daily with CME's published settlement files. `update.py` contains options for initializing the database, updating it daily, and cleaning up the source data.
 
 Additionaly, VX settlements are provided from CBOE, and spot prices are available for select contracts.
