@@ -136,18 +136,18 @@ def write_csv(date: str):
 
                     month = CALENDAR[int(delivery[4:6])]
 
-                # propagage settle for contracts that didn't trade
+                # propagate settle for contracts that didn't trade
 
                 scale = enabled_contracts[symbol]["scale"]
 
-                id          =   f"{exchange}_{symbol}{month}{year}"
-                date_        =  row[0]
-                settle      =   str(float(row[13]) * scale) if row[13] != "" else "NULL"
-                open_       =   str(float(row[12]) * scale) if row[12] != "" else "NULL"
-                high        =   str(float(row[17]) * scale) if row[17] != "" else "NULL"
-                low         =   str(float(row[18]) * scale) if row[18] != "" else "NULL"
-                vol         =   row[21]                     if row[21] != "" else "NULL"
-                oi          =   row[22]                     if row[22] != "" else "NULL"
+                id          = f"{exchange}_{symbol}{month}{year}"
+                date_       = row[0]
+                settle      = str(float(row[13]) * scale) if row[13] != "" else "NULL"
+                open_       = str(float(row[12]) * scale) if row[12] != "" else "NULL"
+                high        = str(float(row[17]) * scale) if row[17] != "" else "NULL"
+                low         = str(float(row[18]) * scale) if row[18] != "" else "NULL"
+                vol         = row[21]                     if row[21] != "" else "NULL"
+                oi          = row[22]                     if row[22] != "" else "NULL"
 
                 from_date = row[0]  # see note below
                 to_date =   row[10]

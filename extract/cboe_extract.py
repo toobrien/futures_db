@@ -16,12 +16,14 @@ from time       import time
 # VX final settlement:  https://www.cboe.com/us/futures/market_statistics/final_settlement_prices/csv
 # daily VX settlements: https://www.cboe.com/us/futures/market_statistics/settlement/csv?dt={yyyy-mm-dd}
 
+
 config = loads(open("./config.json").read())
 
 DATE_FMT    = config["date_fmt"]
 LOG_FMT     = config["log_fmt"]
 VX_FN_FMT   = "{date}_cfe_vx_{month}{year}.csv"
 CALENDAR    = { "F", "G", "H", "J", "K", "M", "N", "Q", "U", "V", "X", "Z" }
+
 
 def get_csv(url: str):
 
@@ -193,6 +195,7 @@ def get_latest(date: str):
                 fd.write(res.text)
 
     return 0
+
 
 def get_current_settlements(date: str):
 
